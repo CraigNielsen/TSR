@@ -5,9 +5,53 @@ using namespace std;
 
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
-#define VIDEO_PATH "/home/craig/QT/Videos/12.avi"
+#define VIDEO_PATH "/home/craig/Videos/2.avi"
+
+void MainWindow::setInitVariables()
+{
+
+    //Gui values
+    writeBackgrounds=false;
+    writeROI=false;
 
 
+    svm.load("/home/craig/scripts/road1.xml"); // loading
+    roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);
+    a=0;b=0;c=62;d=255;e=46;f=255;
+    minA=200;
+    maxA=20000;
+    ui->kernalWidthSpin->setValue(3);
+    ui->kernalTypeSpin->setValue(0);
+    ui->morphOperatorSlider->setValue(1);
+    ui->GBlurAmtSlider->setSingleStep(3);
+    ui->kernal_width_slider->setValue(3);
+    ui->kernal_height_slider->setValue(3);
+    ui->contourRModeSlider->setValue(1);
+
+    //____________________________SObel_________________________________________
+    GaussBlurAmt = 7;
+    SobelKernalSize =3;
+    gradient=0.45;
+    scale = 1;
+    delta = 0;
+    ddepth = CV_16S;
+//    //________________________MorphologyEx____________________________________
+    kernalType = 0;
+    morph_size = 0;
+    morph_width = 5;
+    morph_height = 5;
+    morph_operator = 1;
+    updateSizeLabel();
+    updateKernalTypeLabel();
+    updateMorphologyTypeLabel();
+    //__________________________________________________________________________
+    //_______________________Contours and Rectangles____________________________
+    contourModeValue=0;
+    heightOfRectangleSqed=5;
+    TolleranceError=1/10.;
+
+
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -99,8 +143,10 @@ void MainWindow::on_open_clicked()  //__________________________________________
 ///        Show in a window
 //        namedWindow("test",2);
 //        imshow("test",src_gray);
-        namedWindow("contourImage",CV_WINDOW_FREERATIO);
-        cv::imshow("contourImage", src);
+
+        namedWindow("Source Clean",CV_WINDOW_FREERATIO);
+        cv::imshow("Source Clean", src_clean);
+
 //        namedWindow( "Contours2", CV_WINDOW_FREERATIO );
 //        imshow( "Contours2", SrcRoi );
 
@@ -129,47 +175,7 @@ void MainWindow::showImage(Mat &image,char*name,string flags)
 
 }
 
-void MainWindow::setInitVariables()
-{
 
-    //Gui values
-    svm.load("/home/craig/scripts/road1.xml"); // loading
-    roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);
-    a=0;b=0;c=62;d=255;e=46;f=255;
-    minA=200;
-    maxA=20000;
-    ui->kernalWidthSpin->setValue(3);
-    ui->kernalTypeSpin->setValue(0);
-    ui->morphOperatorSlider->setValue(1);
-    ui->GBlurAmtSlider->setSingleStep(3);
-    ui->kernal_width_slider->setValue(3);
-    ui->kernal_height_slider->setValue(3);
-    ui->contourRModeSlider->setValue(1);
-
-    //____________________________SObel_________________________________________
-    GaussBlurAmt = 7;
-    SobelKernalSize =3;
-    gradient=0.45;
-    scale = 1;
-    delta = 0;
-    ddepth = CV_16S;
-//    //________________________MorphologyEx____________________________________
-    kernalType = 0;
-    morph_size = 0;
-    morph_width = 5;
-    morph_height = 5;
-    morph_operator = 1;
-    updateSizeLabel();
-    updateKernalTypeLabel();
-    updateMorphologyTypeLabel();
-    //__________________________________________________________________________
-    //_______________________Contours and Rectangles____________________________
-    contourModeValue=0;
-    heightOfRectangleSqed=5;
-    TolleranceError=1/10.;
-
-
-}
 
 void MainWindow::invertGrayImage(Mat &image)
 {

@@ -75,21 +75,42 @@ void MainWindow::finalCrop(Mat &image)
 //    showImage(croppedImage,"testing the crop");
 
 }
-void MainWindow::preProcessROI(Mat &src)
+void MainWindow::preProcessROI(Mat &src_)
 {
     // Floodfill corners
-//    floodFill(src,Point (2,2),255,0,50,50);
-    getRed_inRGB(src);
-    namedWindow("floodfill",2);
-    imshow("floodfill",src);
-//    waitKey(50);
-//    imwrite("/home/craig/QT/scripts/allBW/"+std::to_string(name)+".png",src);
-//    name+=1;
+    //    floodFill(src_,Point (2,2),255,0,50,50);
+    getRed_inRGB(src_);
+
+    //    src_gray= blank.clone();
+    cv::inRange(src_, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src_);
+    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
+    cout<< src_.channels()<<endl;
+    //    cv::cvtColor(src_,blank,CV_BGR2GRAY);
+
+
+    src_=src_>80;
+
+//    cv::GaussianBlur(src_,src_,Size(1,1),1);
+
+    Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
+//    morphologyEx(src_,src_,MORPH_CLOSE,element);
+    morphologyEx( src_, src_,  MORPH_OPEN, element );   //output is  (Src is always RGB)
+
+    src_=src_>80;
+
+
+
+    if (writeROI)
+    {
+        namedWindow("floodfill",2);
+        imshow("floodfill",src_);
+        imwrite("/home/craig/Pictures/training_images/BW_ROI/"+std::to_string(name)+".png",src_);
+        name+=1;
+    }
 //    waitKey(100);
     //threshold red out
     // treshold black near the centre
     // add red and black together and view to check
-
 
 }
 void MainWindow::floodfillProcess(){

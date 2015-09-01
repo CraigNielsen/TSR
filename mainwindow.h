@@ -26,8 +26,11 @@ class MainWindow : public QMainWindow
     ///
     char* source="/home/craig/data/image.jpg";
     ///__________________________________________
+
+    bool writeBackgrounds=false;
+    bool writeROI=true;
     //____________________________Global________________________________________
-    Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,SrcRoi,SrcRoi_clean;
+    Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
     int name=0;
     trainerObject trainer=trainerObject();

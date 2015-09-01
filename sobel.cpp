@@ -26,8 +26,8 @@ void MainWindow::getRed_inRGB(Mat &src)
 
 
     int r,g,b;
-    int delRG=60;
-    int delRB=60;
+    int delRG=40;
+    int delRB=40;
 //    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC3);
 //    Mat output = SrcRoi.clone();
     for (int i=0; i<src.rows ; i++)
@@ -58,16 +58,7 @@ void MainWindow::getRed_inRGB(Mat &src)
         }
     }
 
-//    src_gray= blank.clone();
-    cv::inRange(src, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src);
-    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
-    cout<< src.channels()<<endl;
-//    cv::cvtColor(src,blank,CV_BGR2GRAY);
 
-
-    src=src>80;
-    cv::GaussianBlur(src,src,Size(1,1),1);
-    src=src>80;
 
 }
 void MainWindow::benallallRGB()
@@ -114,6 +105,7 @@ void MainWindow::Setup(Mat &frame)
  * creates the src ,  SrcRoi , cnt_img
 */
     src=frame.clone();
+    src_clean=frame.clone();
     SrcRoi=(src(roi));
     SrcRoi_clean=(src(roi)).clone();
     cnt_img = Mat::zeros(SrcRoi.rows, SrcRoi.cols, CV_8UC3);

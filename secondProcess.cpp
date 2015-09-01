@@ -126,6 +126,8 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
             }
         }
     }
+
+
     /// Draw contours + rotated rects + ellipses
 //    namedWindow("region",2);
     for( int i = 0; i< contours1.size(); i++ )
@@ -151,17 +153,36 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     try{ro =Rect(r1.x,r1.y,r1.width,r1.height);}
                     catch (exception){cout<<"caught"<<endl;}
 
-                    Mat imageROI= (SrcRoi(minRect[i])).clone();
-                    cv::Size size(30,30);
-                    Mat imr;
-                    try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);}
-                    catch(exception){cout<<"Caught"<<endl;}
+                    Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
+                    if (writeROI)
+                    {
+                        namedWindow("test",2);
+                        imshow("test",imageROI);
+                        waitKey(200);
+                    }
+
+ /* ROI SIZE*/      cv::Size size(80,80);
+
+                    if (writeBackgrounds)
+                    {
+                        Mat imr;
+                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);}
+                        catch(exception){cout<<"Caught"<<endl;}
+
+                        imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
+                        name+=1;
+                    }
 //                    namedWindow("4",2);
 //                    imshow("2",SrcRoi_clean);
 
-                    //                 cv::resize(imageROI,imageROI,size,0,0,INTER_AREA);
-                    //                 preProcessROI(imageROI);
+                    cv::resize(imageROI,imageROI,size,0,0,INTER_AREA);
 
+                    if (writeROI)
+                    {
+                        imwrite("/home/craig/Pictures/training_images/ROI/"+std::to_string(name)+".png",imageROI);
+                        name+=1;
+                    }
+                    preProcessROI(imageROI);
 
                     //                 CleanUpROI(imageROI);
                     //                 namedWindow("region",2);
@@ -180,9 +201,10 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
 
                     //                 float answer1= svm.predict(img_mat4);
                     //                 cout<<answer1<<endl;
+                    if (writeBackgrounds)
+                    {
 
-                    imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
-                    name+=1;
+                    }
                     //                 waitKey(100);
                 }
             }
