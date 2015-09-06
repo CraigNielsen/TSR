@@ -12,8 +12,8 @@ void MainWindow::setInitVariables()
 
     //Gui values
     writeBackgrounds=false;
-    writeROI=false;
-
+    writeROI=true;
+    size_= cv::Size(5,5);
 
     svm.load("/home/craig/scripts/road1.xml"); // loading
     roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);

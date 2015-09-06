@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow
 
     bool writeBackgrounds=false;
     bool writeROI=true;
+    cv::Size size_;
     //____________________________Global________________________________________
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;

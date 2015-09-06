@@ -161,12 +161,12 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                         waitKey(200);
                     }
 
- /* ROI SIZE*/      cv::Size size(80,80);
+ /* ROI SIZE*/
 
                     if (writeBackgrounds)
                     {
                         Mat imr;
-                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);}
+                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size_,0,0,INTER_AREA);}
                         catch(exception){cout<<"Caught"<<endl;}
 
                         imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
@@ -175,8 +175,9 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
 //                    namedWindow("4",2);
 //                    imshow("2",SrcRoi_clean);
 
-                    cv::resize(imageROI,imageROI,size,0,0,INTER_AREA);
-
+                    cv::resize(imageROI,imageROI,size_,0,0,INTER_LINEAR);
+                    namedWindow("resize",2);
+                    imshow("resize",imageROI);
                     if (writeROI)
                     {
                         imwrite("/home/craig/Pictures/training_images/ROI/"+std::to_string(name)+".png",imageROI);
