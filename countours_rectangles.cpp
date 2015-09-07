@@ -166,7 +166,9 @@ void MainWindow::getShape(Mat &src_)
     get1DFeatureRow(src_,featureRowTemp);
 
     // get the label of the test vector
+    printOutMatrix(src_);
     cout << "predicted label: "<< df3(samples[0])<< endl;
+
     namedWindow("roi",2);
     imshow("roi",src_);
     waitKey(0);
@@ -195,6 +197,41 @@ void MainWindow::get1DFeatureRow(Mat &img_mat,Mat & featureRow)
     }
     convertToDlib(featureRow);
 
+}
+
+void MainWindow::printOutMatrix(Mat &in_)
+{
+    if (in_.channels()==3)
+    {
+        for (int i=0; i<in_.rows ; i+=1)
+        {
+
+            Vec3b* pixel = in_.ptr<Vec3b>(i);
+
+            for (int j=0 ; j<in_.cols ; j+=1)
+            {
+                float r= (float)pixel[j][2];
+                float g= (float)pixel[j][1];
+                float b= (float)pixel[j][0];
+                cout<<"r: "<<r<<" g: "<< g<< " b: "<< b << endl;
+            }
+        }
+    }
+    else if (in_.channels()==1)
+    {
+        for (int i=0; i<in_.rows ; i+=1)
+        {
+
+            uchar* pixel = in_.ptr<uchar>(i);
+
+            for (int j=0 ; j<in_.cols ; j+=1)
+            {
+                float r= (float)pixel[j];
+
+                cout<<"uchar: "<<r<<endl;
+            }
+        }
+    }
 }
 void MainWindow::convertToDlib(Mat &src_)
 {

@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow
     void getShape(Mat & src_);
     void get1DFeatureRow(Mat & img_mat, Mat &featureRow);
     std::vector<sample_type> samples;
+    void printOutMatrix(Mat & in_);
     //______________________________________________________________________
     bool writeBackgrounds=false;
     bool writeROI=true;
