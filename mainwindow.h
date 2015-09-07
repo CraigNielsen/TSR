@@ -9,7 +9,10 @@
 #include <QLabel>
 #include "imagemanipulator.h"
 #include "trainerobject.h"
-
+#include <dlib/svm_threaded.h>
+#include <iostream>
+#include <vector>
+#include <dlib/rand.h>
 
 using namespace cv;
 
@@ -27,6 +30,24 @@ class MainWindow : public QMainWindow
     char* source="/home/craig/data/image.jpg";
     ///__________________________________________
 
+    //+++++++++++++___ DLIB  CLASSIFIER ___+++++++++++++++++++++++++++++++++
+    static const int tImageCols=100;
+
+    typedef dlib::matrix<double,tImageCols,1> sample_type;
+    typedef dlib::one_vs_one_trainer<dlib::any_trainer<sample_type> > ovo_trainer;
+    typedef dlib::polynomial_kernel<sample_type> poly_kernel;
+    typedef dlib::radial_basis_kernel<sample_type> rbf_kernel;
+
+    dlib::one_vs_one_decision_function<ovo_trainer,
+    dlib::decision_function<poly_kernel>,  // This is the output of the poly_trainer
+    dlib::decision_function<rbf_kernel>    // This is the output of the rbf_trainer
+    > df3;
+    void convertToDlib(Mat & src_);
+    Mat featureRowTemp;
+    void getShape(Mat & src_);
+    void get1DFeatureRow(Mat & img_mat, Mat &featureRow);
+    std::vector<sample_type> samples;
+    //______________________________________________________________________
     bool writeBackgrounds=false;
     bool writeROI=true;
     cv::Size size_;
@@ -85,6 +106,7 @@ class MainWindow : public QMainWindow
     vector<vector<Point> > contours;
     void drawRectangles(vector<RotatedRect> rects, Mat &image);
     void drawRectangle(RotatedRect rect, Mat &image);
+
     int a,b,c,d,e,f;
     float heightOfRectangleSqed=5;                                                             //tollerance aspect ratio of rectangles in image
     float TolleranceError=1/10.;                                                //tollerance for area allowed

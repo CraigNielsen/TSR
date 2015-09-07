@@ -151,6 +151,70 @@ void MainWindow::drawRectangle(RotatedRect rect,Mat &image){
        line( image, rect_points[j], rect_points[(j+1)%4], color2, 4, 8 );
 
 }
+
+
+
+
+
+void MainWindow::getShape(Mat &src_)
+{
+    //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
+
+    // get the feature row of test vector
+
+    if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;return ;}
+    get1DFeatureRow(src_,featureRowTemp);
+
+    // get the label of the test vector
+    cout << "predicted label: "<< df3(samples[0])<< endl;
+    namedWindow("roi",2);
+    imshow("roi",src_);
+    waitKey(0);
+
+
+}
+
+void MainWindow::get1DFeatureRow(Mat &img_mat,Mat & featureRow)
+{
+
+/*
+    reads image
+    creates feature row
+    adds feature row to training data Mat
+    adds a pair to labelnames
+ * */
+    uchar* opixel = featureRow.ptr<uchar>(0);
+    for (int i=0; i<img_mat.rows ; i+=1)
+    {
+        uchar* pixel = img_mat.ptr<uchar>(i);
+
+        for (int j=0 ; j<img_mat.cols ; j+=1)
+        {
+            (*opixel++)= pixel[j];
+        }
+    }
+    convertToDlib(featureRow);
+
+}
+void MainWindow::convertToDlib(Mat &src_)
+{
+        //create a m type to pass to the matrix
+        dlib::matrix<double,tImageCols,1> m;
+        //iterate through the matrix
+        for (int i=0; i<src_.rows;i++)
+        {
+            //create pointer to each row in matrix
+            uchar * pixel = src_.ptr<uchar>(i);
+            for (int j= 0 ; j<src_.cols;j++)
+            {
+                float p=(float)pixel[j];
+                m(j)=p;
+            }
+            samples[0]=m;
+        }
+        // each row is copied into the dlib vector
+}
+
 bool MainWindow::checkSizes(RotatedRect candidate ){
 
     //Spain car plate size: 52x11 aspect 4,7272

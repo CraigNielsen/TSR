@@ -12,10 +12,17 @@ void MainWindow::setInitVariables()
 
     //Gui values
     writeBackgrounds=false;
-    writeROI=true;
+    writeROI=false;
     size_= cv::Size(10,10);
 
     svm.load("/home/craig/scripts/road1.xml"); // loading
+    //_____________LOAD  DLIB CLASSIFIER _________________
+
+    // load the function back in from disk and store it in df3.
+    dlib::deserialize("df.dat") >> df3;
+    featureRowTemp=Mat(1,tImageCols,CV_8UC1);
+    //____________________________________________________
+
     roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);
     a=0;b=0;c=62;d=255;e=46;f=255;
     minA=200;

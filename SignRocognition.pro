@@ -7,12 +7,15 @@
 QT       += core gui
 CONFIG += gnu++11
 CONFIG += link_pkgconfig
+PKGCONFIG += opencv
+
 PKGCONFIG += x11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QMAKE_CXXFLAGS += -std=c++11
 TARGET = ComboGuiTest
 TEMPLATE = app
 INCLUDEPATH += /home/craig/git_repos/QT_Projects/Image_SVM/
+INCLUDEPATH+= /home/craig/git_repos/dlib/
 
 SOURCES += main.cpp\
     sobel.cpp \
@@ -44,7 +47,6 @@ FORMS    += mainwindow.ui
 
 LIBS += `pkg-config opencv --libs`
 
-INCLUDEPATH+= /home/craig/git_repos/dlib/
 
 
 
