@@ -84,7 +84,7 @@ void MainWindow::preProcessROI(Mat &src_)
     //    src_gray= blank.clone();
     cv::inRange(src_, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src_);
     Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
-    cout<< src_.channels()<<endl;
+//    cout<< src_.channels()<<endl;
     //    cv::cvtColor(src_,blank,CV_BGR2GRAY);
 
 

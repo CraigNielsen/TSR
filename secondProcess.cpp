@@ -184,7 +184,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                         name+=1;
                     }
                     preProcessROI(imageROI);
-
+                    getShape(imageROI);
                     //                 CleanUpROI(imageROI);
                     //                 namedWindow("region",2);
                     //                 imshow("region",imageROI);

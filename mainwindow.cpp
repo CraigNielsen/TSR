@@ -5,7 +5,7 @@ using namespace std;
 
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
-#define VIDEO_PATH "/home/craig/Videos/2.avi"
+#define VIDEO_PATH "/home/craig/Videos/1.avi"
 
 void MainWindow::setInitVariables()
 {
@@ -14,13 +14,21 @@ void MainWindow::setInitVariables()
     writeBackgrounds=false;
     writeROI=false;
     size_= cv::Size(10,10);
-
+    name=1000;
     svm.load("/home/craig/scripts/road1.xml"); // loading
     //_____________LOAD  DLIB CLASSIFIER _________________
 
+
     // load the function back in from disk and store it in df3.
-    dlib::deserialize("df.dat") >> df3;
-    featureRowTemp=Mat(1,tImageCols,CV_8UC1);
+    try {
+    dlib::deserialize("df2.dat") >> df3;
+    }
+    catch (exception)
+    {
+        cout<<"is the .dat file for classifier dlib in the built directory?";
+    }
+
+    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
     //____________________________________________________
 
     roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);

@@ -43,9 +43,9 @@ class MainWindow : public QMainWindow
     dlib::decision_function<rbf_kernel>    // This is the output of the rbf_trainer
     > df3;
     void convertToDlib(Mat & src_);
-    Mat featureRowTemp;
+    Mat featureRowTemp_;
     void getShape(Mat & src_);
-    void get1DFeatureRow(Mat & img_mat, Mat &featureRow);
+    void get1DFeatureRow(Mat & img_mat, dlib::matrix<double, tImageCols, 1> & m);
     std::vector<sample_type> samples;
     void printOutMatrix(Mat & in_);
     //______________________________________________________________________

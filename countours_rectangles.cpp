@@ -100,10 +100,10 @@ void MainWindow::findRectangles()
             rects.push_back(mr);
         }
     }
-    cout<<rects.size()<<endl;
-    for (RotatedRect i : rects){
-        cout<<i.size<<endl;
-    }
+//    cout<<rects.size()<<endl;
+//    for (RotatedRect i : rects){
+//        cout<<i.size<<endl;
+//    }
     drawRectangles(rects,rec_img);
 
 
@@ -163,20 +163,25 @@ void MainWindow::getShape(Mat &src_)
     // get the feature row of test vector
 
     if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;return ;}
-    get1DFeatureRow(src_,featureRowTemp);
+    dlib::matrix<double,tImageCols,1>  m;
+    get1DFeatureRow(src_,m);
 
     // get the label of the test vector
-    printOutMatrix(src_);
-    cout << "predicted label: "<< df3(samples[0])<< endl;
+//    cout<<samples.size()<<endl;
+    for (int i =0 ; i< m.size() ; i++){
+//        cout<<"out is " << samples[0](i) << endl;
+    }
+    cout << "predicted label: "<< df3(m)<< endl;
+    samples.pop_back();
 
-    namedWindow("roi",2);
-    imshow("roi",src_);
-    waitKey(0);
+//    namedWindow("roi",2);
+//    imshow("roi",src_);
+//    waitKey(0);
 
 
 }
 
-void MainWindow::get1DFeatureRow(Mat &img_mat,Mat & featureRow)
+void MainWindow::get1DFeatureRow(Mat &img_mat,    dlib::matrix<double,tImageCols,1> & m)
 {
 
 /*
@@ -185,54 +190,25 @@ void MainWindow::get1DFeatureRow(Mat &img_mat,Mat & featureRow)
     adds feature row to training data Mat
     adds a pair to labelnames
  * */
-    uchar* opixel = featureRow.ptr<uchar>(0);
+//    Mat featureRow(1,tImageCols,CV_8UC1);
+//    uchar* opixel = featureRow.ptr<uchar>(0);
+
     for (int i=0; i<img_mat.rows ; i+=1)
     {
         uchar* pixel = img_mat.ptr<uchar>(i);
 
         for (int j=0 ; j<img_mat.cols ; j+=1)
         {
-            (*opixel++)= pixel[j];
+            (m(j))= (double)pixel[j];
+//            cout<<"here: "<< m(j)<<endl;
         }
     }
-    convertToDlib(featureRow);
+    samples.push_back(m);
+//    convertToDlib(featureRow);
 
 }
 
-void MainWindow::printOutMatrix(Mat &in_)
-{
-    if (in_.channels()==3)
-    {
-        for (int i=0; i<in_.rows ; i+=1)
-        {
 
-            Vec3b* pixel = in_.ptr<Vec3b>(i);
-
-            for (int j=0 ; j<in_.cols ; j+=1)
-            {
-                float r= (float)pixel[j][2];
-                float g= (float)pixel[j][1];
-                float b= (float)pixel[j][0];
-                cout<<"r: "<<r<<" g: "<< g<< " b: "<< b << endl;
-            }
-        }
-    }
-    else if (in_.channels()==1)
-    {
-        for (int i=0; i<in_.rows ; i+=1)
-        {
-
-            uchar* pixel = in_.ptr<uchar>(i);
-
-            for (int j=0 ; j<in_.cols ; j+=1)
-            {
-                float r= (float)pixel[j];
-
-                cout<<"uchar: "<<r<<endl;
-            }
-        }
-    }
-}
 void MainWindow::convertToDlib(Mat &src_)
 {
         //create a m type to pass to the matrix
@@ -247,7 +223,7 @@ void MainWindow::convertToDlib(Mat &src_)
                 float p=(float)pixel[j];
                 m(j)=p;
             }
-            samples[0]=m;
+            samples.push_back(m);
         }
         // each row is copied into the dlib vector
 }
@@ -294,7 +270,40 @@ bool MainWindow::checkSizes(RotatedRect candidate ){
         return true;
     }
 }
+void MainWindow::printOutMatrix(Mat &in_)
+{
+    if (in_.channels()==3)
+    {
+        for (int i=0; i<in_.rows ; i+=1)
+        {
 
+            Vec3b* pixel = in_.ptr<Vec3b>(i);
+
+            for (int j=0 ; j<in_.cols ; j+=1)
+            {
+                float r= (float)pixel[j][2];
+                float g= (float)pixel[j][1];
+                float b= (float)pixel[j][0];
+                cout<<"r: "<<r<<" g: "<< g<< " b: "<< b << endl;
+            }
+        }
+    }
+    else if (in_.channels()==1)
+    {
+        for (int i=0; i<in_.rows ; i+=1)
+        {
+
+            uchar* pixel = in_.ptr<uchar>(i);
+
+            for (int j=0 ; j<in_.cols ; j+=1)
+            {
+                float r= (float)pixel[j];
+
+                cout<<"uchar: "<<r<<endl;
+            }
+        }
+    }
+}
 //==================================GUI  =======================================
 
 
