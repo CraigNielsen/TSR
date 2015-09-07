@@ -91,11 +91,11 @@ void MainWindow::preProcessROI(Mat &src_)
     src_=src_>80;
 
 //    cv::GaussianBlur(src_,src_,Size(1,1),1);
-
-    Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
-//    morphologyEx(src_,src_,MORPH_CLOSE,element);
-    morphologyEx( src_, src_,  MORPH_OPEN, element );   //output is  (Src is always RGB)
-
+    if (size_.height>=30){
+        Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
+        //    morphologyEx(src_,src_,MORPH_CLOSE,element);
+        morphologyEx( src_, src_,  MORPH_OPEN, element );   //output is  (Src is always RGB)
+    }
     src_=src_>80;
 
 
@@ -104,7 +104,7 @@ void MainWindow::preProcessROI(Mat &src_)
     {
         namedWindow("floodfill",2);
         imshow("floodfill",src_);
-        imwrite("/home/craig/Pictures/training_images/BW_ROI/"+std::to_string(name)+".png",src_);
+        imwrite("/home/craig/Pictures/training_images/BW_ROIsmall/"+std::to_string(name)+".png",src_);
         name+=1;
     }
 //    waitKey(100);

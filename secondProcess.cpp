@@ -38,19 +38,6 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     /// Detect edges using Threshold
     cv::Canny(src_, bw1, 0, 10, 5);
 
-    if (writeBackgrounds)
-    {
-        Rect ro;
-        ro =Rect(100,220,200,200);
-
-        cv::Size size(80,80);
-        Mat imr;
-        imr= src_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);
-
-
-        imwrite("/home/craig/Pictures/training_images/Backgrounds/"+std::to_string(name)+".png",imr);
-        name+=1;
-    }
 
 
     /// Find contours
@@ -163,7 +150,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     //get ROI, test ROI, printout Class
                     Rect r1=minRect[i];
                     Rect ro;
-                    try{ro =Rect(r1.x-100,r1.y-220,r1.width+200,r1.height+200);}
+                    try{ro =Rect(r1.x,r1.y,r1.width,r1.height);}
                     catch (exception){cout<<"caught"<<endl;}
 
                     Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
@@ -174,22 +161,23 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                         waitKey(200);
                     }
 
- /* ROI SIZE*/      cv::Size size(80,80);
+ /* ROI SIZE*/
 
                     if (writeBackgrounds)
                     {
                         Mat imr;
-                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);}
+                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size_,0,0,INTER_AREA);}
                         catch(exception){cout<<"Caught"<<endl;}
 
-                        imwrite("/home/craig/Pictures/training_images/Backgrounds/"+std::to_string(name)+".png",imr);
+                        imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
                         name+=1;
                     }
 //                    namedWindow("4",2);
 //                    imshow("2",SrcRoi_clean);
 
-                    cv::resize(imageROI,imageROI,size,0,0,INTER_AREA);
-
+                    cv::resize(imageROI,imageROI,size_,0,0,INTER_LINEAR);
+                    namedWindow("resize",2);
+                    imshow("resize",imageROI);
                     if (writeROI)
                     {
                         imwrite("/home/craig/Pictures/training_images/ROI/"+std::to_string(name)+".png",imageROI);

@@ -5,19 +5,18 @@ using namespace std;
 
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
-#define VIDEO_PATH "/home/craig/Videos/long.mp4"
+#define VIDEO_PATH "/home/craig/Videos/2.avi"
 
 void MainWindow::setInitVariables()
 {
 
     //Gui values
-    writeBackgrounds=true;
+    writeBackgrounds=false;
     writeROI=true;
-
+    size_= cv::Size(10,10);
 
     svm.load("/home/craig/scripts/road1.xml"); // loading
-    roi = cv::Rect(0,0,srcCols-1,srcRows/3);
-//    roi = cv::Rect(0,0,srcCols,srcRows);
+    roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);
     a=0;b=0;c=62;d=255;e=46;f=255;
     minA=200;
     maxA=20000;
@@ -146,7 +145,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
 //        imshow("test",src_gray);
 
         namedWindow("Source Clean",CV_WINDOW_FREERATIO);
-        cv::imshow("Source Clean", src);
+        cv::imshow("Source Clean", src_clean);
 
 //        namedWindow( "Contours2", CV_WINDOW_FREERATIO );
 //        imshow( "Contours2", SrcRoi );
