@@ -38,6 +38,19 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     /// Detect edges using Threshold
     cv::Canny(src_, bw1, 0, 10, 5);
 
+    if (writeBackgrounds)
+    {
+        Rect ro;
+        ro =Rect(100,220,200,200);
+
+        cv::Size size(80,80);
+        Mat imr;
+        imr= src_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);
+
+
+        imwrite("/home/craig/Pictures/training_images/Backgrounds/"+std::to_string(name)+".png",imr);
+        name+=1;
+    }
 
 
     /// Find contours
@@ -150,7 +163,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     //get ROI, test ROI, printout Class
                     Rect r1=minRect[i];
                     Rect ro;
-                    try{ro =Rect(r1.x,r1.y,r1.width,r1.height);}
+                    try{ro =Rect(r1.x-100,r1.y-220,r1.width+200,r1.height+200);}
                     catch (exception){cout<<"caught"<<endl;}
 
                     Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
@@ -169,7 +182,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                         try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size,0,0,INTER_AREA);}
                         catch(exception){cout<<"Caught"<<endl;}
 
-                        imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
+                        imwrite("/home/craig/Pictures/training_images/Backgrounds/"+std::to_string(name)+".png",imr);
                         name+=1;
                     }
 //                    namedWindow("4",2);
