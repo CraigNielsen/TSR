@@ -75,7 +75,17 @@ void MainWindow::finalCrop(Mat &image)
 //    showImage(croppedImage,"testing the crop");
 
 }
-void MainWindow::preProcessROI(Mat &src_)
+bool testCentre(Mat & src_)
+{
+
+    int rws=src_.rows/2;
+    int cls=src_.cols/2;
+    int color=(int)src_.at<uchar>(rws,cls);
+    if (color == 255){return false;}
+    else {return true;}
+
+}
+bool MainWindow::preProcessROI(Mat &src_)
 {
     // Floodfill corners
     //    floodFill(src_,Point (2,2),255,0,50,50);
@@ -98,15 +108,18 @@ void MainWindow::preProcessROI(Mat &src_)
     }
     src_=src_>80;
 
-
-
-    if (writeROI)
+    bool yes=testCentre(src_);
+    if (yes)
     {
-        namedWindow("floodfill",2);
-        imshow("floodfill",src_);
-        imwrite("/home/craig/Pictures/training_images/BW_ROIsmall/"+std::to_string(name)+".png",src_);
-        name+=1;
+        if (writeROI)
+        {
+            namedWindow("floodfill",2);
+            imshow("floodfill",src_);
+            imwrite("/home/craig/Pictures/training_images/BW_ROIsmall/"+std::to_string(name)+".png",src_);
+            name+=1;
+        }
     }
+    return yes;
 //    waitKey(100);
     //threshold red out
     // treshold black near the centre

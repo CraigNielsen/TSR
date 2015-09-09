@@ -52,6 +52,8 @@ class MainWindow : public QMainWindow
     bool writeBackgrounds=false;
     bool writeROI=true;
     cv::Size size_;
+    bool preProcessROI(Mat &src);
+    void selectROI(Mat &src_, Mat &dst_, int thickness, bool rect=false);
     //____________________________Global________________________________________
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
@@ -124,7 +126,7 @@ public:
     QImage ProPic;
     void detectROIShapes_one();
     void detectShapes();
-    void selectROI(Mat &src_, Mat &dst_, int thickness, bool rect=false);
+
     void getRed_inRGB(Mat &src);
     void benallallRGB();
 private slots:
@@ -139,7 +141,7 @@ private slots:
     void on_kernalWidthSpin_valueChanged(int arg1);
     void on_kernal_height_slider_valueChanged(int value);
     void on_kernalHeightSpin_valueChanged(int arg1);
-    void preProcessROI(Mat &src);
+
     //__________________________________________________________________________
 
 

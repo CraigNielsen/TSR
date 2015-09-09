@@ -174,17 +174,21 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     }
 //                    namedWindow("4",2);
 //                    imshow("2",SrcRoi_clean);
-
+                    Mat ri=imageROI.clone();
                     cv::resize(imageROI,imageROI,size_,0,0,INTER_LINEAR);
                     namedWindow("resize",2);
-                    imshow("resize",imageROI);
+
                     if (writeROI)
                     {
                         imwrite("/home/craig/Pictures/training_images/ROI/"+std::to_string(name)+".png",imageROI);
                         name+=1;
                     }
-                    preProcessROI(imageROI);
-                    getShape(imageROI);
+                    if (preProcessROI(imageROI)) //checks if center is red or not
+                    {
+                        getShape(imageROI);
+                        imshow("resize",ri);
+                        waitKey(100);
+                    }
                     //                 CleanUpROI(imageROI);
                     //                 namedWindow("region",2);
                     //                 imshow("region",imageROI);
