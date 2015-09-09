@@ -8,10 +8,10 @@ QT       += core gui
 CONFIG += gnu++11
 CONFIG += link_pkgconfig
 PKGCONFIG += opencv
-
+QMAKE_CXXFLAGS += -std=c++11
 PKGCONFIG += x11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-QMAKE_CXXFLAGS += -std=c++11
+
 TARGET = ComboGuiTest
 TEMPLATE = app
 INCLUDEPATH += /home/craig/git_repos/QT_Projects/Image_SVM/
@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     ../QT_Projects/Image_SVM/cbn_consoleoutput.cpp \
     ../QT_Projects/Image_SVM/consoleOutputs.cpp \
     ../QT_Projects/Image_SVM/file_io.cpp\
-    ../dlib/dlib/all/source.cpp
+    ../dlib/dlib/all/source.cpp \
+    classifyfunctions.cpp
 
 
 

@@ -156,43 +156,6 @@ void MainWindow::drawRectangle(RotatedRect rect,Mat &image){
 
 
 
-void MainWindow::getShape(Mat &src_)
-{
-    //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
-
-    // get the feature row of test vector
-    Mat triangle=imread("/home/craig/Pictures/training_images/shape/tri.png",CV_LOAD_IMAGE_GRAYSCALE);
-    triangle=triangle>80;
-
-    Mat circle=imread("/home/craig/Pictures/training_images/shape/circ.png");
-
-    src_=src_>80;
-    Mat combine=src_.clone();
-    cout<< triangle.channels()<< " "<< src_.channels()<<endl;
-    bitwise_and(triangle,src_,combine);
-    namedWindow("combined",2);
-    imshow("combined",combine);
-    waitKey(0);
-
-    if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;return ;}
-    dlib::matrix<double,tImageCols,1>  m;
-    get1DFeatureRow(src_,m);
-
-    // get the label of the test vector
-//    cout<<samples.size()<<endl;
-    for (int i =0 ; i< m.size() ; i++){
-//        cout<<"out is " << samples[0](i) << endl;
-    }
-    cout << "predicted label: "<< df3(m)<< endl;
-    samples.pop_back();
-
-//    namedWindow("roi",2);
-//    imshow("roi",src_);
-//    waitKey(0);
-
-
-}
-
 void MainWindow::get1DFeatureRow(Mat &img_mat,    dlib::matrix<double,tImageCols,1> & m)
 {
 
@@ -316,6 +279,8 @@ void MainWindow::printOutMatrix(Mat &in_)
         }
     }
 }
+
+
 //==================================GUI  =======================================
 
 

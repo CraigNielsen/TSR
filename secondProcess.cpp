@@ -176,7 +176,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
 //                    imshow("2",SrcRoi_clean);
                     Mat ri=imageROI.clone();
                     cv::resize(imageROI,imageROI,size_,0,0,INTER_LINEAR);
-                    namedWindow("resize",2);
+                    namedWindow("roi",2);
 
                     if (writeROI)
                     {
@@ -185,8 +185,9 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     }
                     if (preProcessROI(imageROI)) //checks if center is red or not
                     {
-                        getShape(imageROI);
-                        imshow("resize",ri);
+
+                        getShape(imageROI,ri);
+                        imshow("roi",ri);
                         waitKey(100);
                     }
                     //                 CleanUpROI(imageROI);
