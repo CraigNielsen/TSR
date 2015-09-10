@@ -44,11 +44,11 @@ class MainWindow : public QMainWindow
     > df3;
     void convertToDlib(Mat & src_);
     Mat featureRowTemp_;
-    void getShape(Mat & src_, Mat &roi);
+    void getShape(Mat & src_, Mat &roii);
     void get1DFeatureRow(Mat & img_mat, dlib::matrix<double, tImageCols, 1> & m);
     std::vector<sample_type> samples;
     void printOutMatrix(Mat & in_);
-    void cropTraingle(Mat &BW, Mat & roi);
+    void cropTraingle(Mat &BW, Mat & roii);
     //______________________________________________________________________
     bool writeBackgrounds=false;
     bool writeROI=true;

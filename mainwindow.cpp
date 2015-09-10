@@ -13,7 +13,7 @@ void MainWindow::setInitVariables()
     //Gui values
     writeBackgrounds=false;
     writeROI=false;
-    size_= cv::Size(10,10);
+    size_= cv::Size(50,50);
     name=1000;
     svm.load("/home/craig/scripts/road1.xml"); // loading
     //_____________LOAD  DLIB CLASSIFIER _________________
