@@ -76,8 +76,9 @@ void MainWindow::getShape(Mat &src_,Mat & roii)
     Mat triangle=imread("/home/craig/Pictures/training_images/shape/tri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangle=triangle>80;
 
+//    cv::resize(triangle,triangle,size_,0,0,INTER_LINEAR);
     Mat circle=imread("/home/craig/Pictures/training_images/shape/circ.png",CV_LOAD_IMAGE_GRAYSCALE);
-
+//    cv::resize(circle,circle,size_,0,0,INTER_LINEAR);
     src_=src_>80;
     Mat combine=src_.clone();
     Mat combine2=src_.clone();
