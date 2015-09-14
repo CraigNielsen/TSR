@@ -113,7 +113,8 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     vector<Rect> minRect( contours1.size() );
     vector<RotatedRect> minEllipse( contours1.size() );
 
-    for( int i = 0; i < contours1.size(); i++ ){
+    for( int i = 0; i < contours1.size(); i++ )
+    {
         //check size of min area rect for contours
         //check if centre is red
         if (! centreRed[i])
@@ -134,90 +135,65 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
        {
         if (!centreRed[i]){
             int a=(minAreaRect( Mat(contours1[i]) ).size.area());
-            if ( a > minA && a < maxA ){
+            if ( a > minA && a < maxA )
+            {
                 Scalar color = Scalar( 255, 255, 255 );
                 // contour
                 drawContours( dst_, contours1, i, color, 5, 8, vector<Vec4i>(), 0, Point() );
                 // ellipse
                 if (!rect){
                     ellipse( cnt_img, minEllipse[i], color, thickness, 8 );}
+
+
+
                 if (rect){
+                    //draw ellipse
                     RotatedRect re= RotatedRect(minEllipse[i].center,Size2f(minEllipse[i].size.width*1.2,minEllipse[i].size.height*1.2),minEllipse[i].angle);
-                    ellipse( dst_, re, color, thickness, 8 );}
-                // rotated rectangle
-                if (rect){
+                    ellipse( dst_, re, color, thickness, 8 );
+                //_____________________________________________________________________________________
+                //draw rectangle
                     rectangle( dst_, minRect[i].tl(), minRect[i].br(), color, 2, 8, 0 );
                     //get ROI, test ROI, printout Class
                     Rect r1=minRect[i];
                     Rect ro;
                     try{ro =Rect(r1.x,r1.y,r1.width,r1.height);}
-                    catch (exception){cout<<"caught"<<endl;}
+                    catch (exception){cout<<"caught rectangle creation exception"<<endl;}
 
                     Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
-                    if (writeROI)
-                    {
-                        namedWindow("test",2);
-                        imshow("test",imageROI);
-                        waitKey(200);
-                    }
-
+                    Mat ir1= (SrcRoi_clean(minRect[i]));
+                    Size s;
+                    Point centre;
+                    ir1.locateROI(s,centre);
  /* ROI SIZE*/
 
-                    if (writeBackgrounds)
-                    {
-                        Mat imr;
-                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size_,0,0,INTER_AREA);}
-                        catch(exception){cout<<"Caught"<<endl;}
-
-                        imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
-                        name+=1;
-                    }
-//                    namedWindow("4",2);
-//                    imshow("2",SrcRoi_clean);
                     Mat ri=imageROI.clone();
-                    cv::resize(imageROI,imageROI,size_,0,0,INTER_LINEAR);
-                    namedWindow("roi",2);
 
-                    if (writeROI)
+                    cv::resize(imageROI,imageROI,size_,0,0,INTER_NEAREST);
+                    namedWindow("roi",2);
+                    Mat temp=imageROI.clone();
+                    bool checkedCenter=preProcessROI(temp);
+                    if (checkedCenter && writeROI)
                     {
-                        imwrite("/home/craig/Pictures/training_images/ROI/"+std::to_string(name)+".png",imageROI);
+
+                        namedWindow("writing",2);
+                        imshow("writing",imageROI);
+                        waitKey(200);
+
+                        imwrite(roiPath+std::to_string(name)+".png",imageROI);
                         name+=1;
                     }
-                    if (preProcessROI(imageROI)) //checks if center is red or not
+                    if (preProcessROI(imageROI) && bitwise_shape) //checks if center is red or not
                     {
-
-                        getShape(imageROI,ri);
+                        try{ getShape(imageROI,ri);}
+                        catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
                         imshow("roi",ri);
                         waitKey(100);
                     }
-                    //                 CleanUpROI(imageROI);
-                    //                 namedWindow("region",2);
-                    //                 imshow("region",imageROI);
-                    //                 Mat  img_mat3 = Mat(1,2700,CV_32FC1);
-                    //                 string path_ ="/home/craig/scripts/temp/0 fuck.jpg";
-                    //                 trainer.getFeatureRow(path_,img_mat3,0);
-                    ///_____________________________________________________________________________PREDICTIONS WITH SVM_______________________________
-                    //                 Mat img_mat4 =Mat(1,2700,CV_32FC1);
-                    ////                 Mat tester=imread("/home/craig/scripts/training/110/1.jpg");
-                    //                 trainer.makeFeatureRow(imageROI,img_mat4);
-
-                    ////                 trainer.io.print_out_Mat(img_mat3);
-                    //                 cout<<"\n  ______ \n "<<endl;
-                    ////                 trainer.io.print_out_Mat(img_mat4);
-
-                    //                 float answer1= svm.predict(img_mat4);
-                    //                 cout<<answer1<<endl;
-                    if (writeBackgrounds)
-                    {
-
-                    }
-                    //                 waitKey(100);
                 }
             }
-//             Point2f rect_points[4]; minRect[i].points( rect_points );
-//             for( int j = 0; j < 4; j++ )
-//                line( dst_, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );}
-       }}
+
+       }
 
 
+}
 }

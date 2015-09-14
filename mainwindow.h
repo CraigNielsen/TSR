@@ -50,8 +50,9 @@ class MainWindow : public QMainWindow
     void printOutMatrix(Mat & in_);
     void cropTraingle(Mat &BW, Mat & roii);
     //______________________________________________________________________
-    bool writeBackgrounds=false;
     bool writeROI=true;
+    bool bitwise_shape=true;
+    string roiPath;
     cv::Size size_;
     bool preProcessROI(Mat &src);
     void selectROI(Mat &src_, Mat &dst_, int thickness, bool rect=false);

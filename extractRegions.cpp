@@ -75,12 +75,15 @@ void MainWindow::finalCrop(Mat &image)
 //    showImage(croppedImage,"testing the crop");
 
 }
-bool testCentre(Mat & src_)
+bool testCentre(Mat & temp)
 {
+//    cv::Size size_= cv::Size(10,10);
+//    Mat temp=src_.clone();
+//    cv::resize(temp,temp,size_,0,0,INTER_LINEAR);
 
-    int rws=src_.rows/2;
-    int cls=src_.cols/2;
-    int color=(int)src_.at<uchar>(rws,cls);
+    int rws=temp.rows/2;
+    int cls=temp.cols/2;
+    int color=(int)temp.at<uchar>(rws,cls);
     if (color == 255){return false;}
     else {return true;}
 

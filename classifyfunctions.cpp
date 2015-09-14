@@ -75,34 +75,31 @@ void MainWindow::getShape(Mat &src_,Mat & roii)
     // get the feature row of test vector
     Mat triangle=imread("/home/craig/Pictures/training_images/shape/tri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangle=triangle>80;
-
-//    cv::resize(triangle,triangle,size_,0,0,INTER_LINEAR);
     Mat circle=imread("/home/craig/Pictures/training_images/shape/circ.png",CV_LOAD_IMAGE_GRAYSCALE);
-//    cv::resize(circle,circle,size_,0,0,INTER_LINEAR);
     src_=src_>80;
+
     Mat combine=src_.clone();
     Mat combine2=src_.clone();
     bitwise_and(triangle,src_,combine);
     bitwise_and(circle,src_,combine2);
     int r=countNonZero(combine);
     int c=countNonZero(combine2);
-    if (r>c){cout<<"triangle"<<endl;
-    cropTraingle(src_,roii);}
+    if (r>c)
+    {
+        Size s;
+        Point p;
+        src_.locateROI(s,p);
+        cout<<"triangle at: "<<s<<p<<endl;
+//    cropTraingle(src_,roii);
+    }
     else {cout << "circle" << endl;}
     if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;return ;}
 
-
 //    dlib::matrix<double,tImageCols,1>  m;
 //    get1DFeatureRow(src_,m);
-
 //    // get the label of the test vecto
-
 //    for (int i =0 ; i< m.size() ; i++){
-
 //    }
 //    cout << "predicted label: "<< df3(m)<< endl;
 //    samples.pop_back();
-
-
-
 }

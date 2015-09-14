@@ -11,9 +11,11 @@ void MainWindow::setInitVariables()
 {
 
     //Gui values
-    writeBackgrounds=false;
+
+    roiPath="/home/craig/Pictures/training_images/ROI/";
     writeROI=false;
-    size_= cv::Size(50,50);
+    bitwise_shape=true;
+    size_= cv::Size(10,10);
     name=1000;
     svm.load("/home/craig/scripts/road1.xml"); // loading
     //_____________LOAD  DLIB CLASSIFIER _________________

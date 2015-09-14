@@ -26,8 +26,8 @@ void MainWindow::getRed_inRGB(Mat &src)
 
 
     int r,g,b;
-    int delRG=40;
-    int delRB=40;
+    int delRG=70;
+    int delRB=70;
 //    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC3);
 //    Mat output = SrcRoi.clone();
     for (int i=0; i<src.rows ; i++)
