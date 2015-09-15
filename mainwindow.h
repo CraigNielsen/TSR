@@ -9,13 +9,14 @@
 #include <QLabel>
 #include "imagemanipulator.h"
 #include "trainerobject.h"
+#include "sign_handler.h"
 #include <dlib/svm_threaded.h>
 #include <iostream>
 #include <vector>
 #include <dlib/rand.h>
 
 using namespace cv;
-
+#define print(a) cout<<a<<endl;
 
 
 namespace Ui {
@@ -44,11 +45,13 @@ class MainWindow : public QMainWindow
     > df3;
     void convertToDlib(Mat & src_);
     Mat featureRowTemp_;
-    void getShape(Mat & src_, Mat &roii);
+    bool getShape(Mat & src_, Mat &roii);
     void get1DFeatureRow(Mat & img_mat, dlib::matrix<double, tImageCols, 1> & m);
     std::vector<sample_type> samples;
     void printOutMatrix(Mat & in_);
     void cropTraingle(Mat &BW, Mat & roii);
+    sign_handler signs;
+    int frameNo=0;
     //______________________________________________________________________
     bool writeROI=true;
     bool bitwise_shape=true;

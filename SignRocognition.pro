@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     ../QT_Projects/Image_SVM/consoleOutputs.cpp \
     ../QT_Projects/Image_SVM/file_io.cpp\
     ../dlib/dlib/all/source.cpp \
-    classifyfunctions.cpp
+    classifyfunctions.cpp \
+    sign_handler.cpp
 
 
 
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     imagemanipulator.h \
     ../QT_Projects/Image_SVM/trainerobject.h \
     ../QT_Projects/Image_SVM/cbn_consoleoutput.h \
-    ../QT_Projects/Image_SVM/file_io.h
+    ../QT_Projects/Image_SVM/file_io.h \
+    sign_handler.h
 
 
 FORMS    += mainwindow.ui

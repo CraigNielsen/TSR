@@ -160,10 +160,8 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     catch (exception){cout<<"caught rectangle creation exception"<<endl;}
 
                     Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
-                    Mat ir1= (SrcRoi_clean(minRect[i]));
-                    Size s;
-                    Point centre;
-                    ir1.locateROI(s,centre);
+
+
  /* ROI SIZE*/
 
                     Mat ri=imageROI.clone();
@@ -182,18 +180,36 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                         imwrite(roiPath+std::to_string(name)+".png",imageROI);
                         name+=1;
                     }
+                    bool tri;
+                    //check centre is not red, then find shape classify for the rectangle(roi and position)
                     if (preProcessROI(imageROI) && bitwise_shape) //checks if center is red or not
                     {
-                        try{ getShape(imageROI,ri);}
+                        try{tri=getShape(imageROI,ri);}//true if triangle, false if circle
                         catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
+
                         imshow("roi",ri);
                         waitKey(100);
                     }
+                    // get centre position of rect in source image
+                    Mat ir1= (SrcRoi_clean(minRect[i]));
+                    Size s;
+                    Point centre;
+                    ir1.locateROI(s,centre);
+                    string label;
+                    (tri) ? (label="tri") : (label="circle") ;
+                    signs.add(centre,label,frameNo);
+                    //use position to find last shape in same position.
+                    //add new shape to the object.
+                    //if object has 5 same shapes, classify(bring up image)
+                    //object can contain areas for possible shapes
+                    //object can contain each areas past shape classifications..
+                    //object can handle showing sign on screen
+                    //object can search its current items and compare based on x,y coordinates
+                    //every time a position is checked, the object will update position and give a new label.
+                    //object will remove possibles if 10 frames pass without close detection
+
                 }
             }
-
-       }
-
-
-}
+        }
+    }
 }

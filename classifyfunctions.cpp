@@ -68,11 +68,12 @@ void MainWindow::cropTraingle(Mat & BW,Mat &roii)
     cout << topc<< " "<< topr <<" "<< botlc<<" "<<botlr<<" "<< botrc<< " "<< botrr<<endl;
 
 }
-void MainWindow::getShape(Mat &src_,Mat & roii)
+bool MainWindow::getShape(Mat &src_,Mat & roii)
 {
     //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
-
+    //return true for triangle, false if its a circle
     // get the feature row of test vector
+    if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;}
     Mat triangle=imread("/home/craig/Pictures/training_images/shape/tri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangle=triangle>80;
     Mat circle=imread("/home/craig/Pictures/training_images/shape/circ.png",CV_LOAD_IMAGE_GRAYSCALE);
@@ -86,14 +87,12 @@ void MainWindow::getShape(Mat &src_,Mat & roii)
     int c=countNonZero(combine2);
     if (r>c)
     {
-        Size s;
-        Point p;
-        src_.locateROI(s,p);
-        cout<<"triangle at: "<<s<<p<<endl;
 //    cropTraingle(src_,roii);
+        return true;
     }
-    else {cout << "circle" << endl;}
-    if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;return ;}
+
+    return false;
+
 
 //    dlib::matrix<double,tImageCols,1>  m;
 //    get1DFeatureRow(src_,m);

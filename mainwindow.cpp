@@ -16,7 +16,7 @@ void MainWindow::setInitVariables()
     writeROI=false;
     bitwise_shape=true;
     size_= cv::Size(10,10);
-    name=1000;
+    name=1;
     svm.load("/home/craig/scripts/road1.xml"); // loading
     //_____________LOAD  DLIB CLASSIFIER _________________
 
@@ -104,8 +104,9 @@ void MainWindow::on_open_clicked()  //__________________________________________
 
     setInitVariables();
     bool stop = false;
-    while (!stop) {                                                             // for all frames in video
 
+    while (!stop) {                                                             // for all frames in video
+        frameNo +=1;
         if (ui->df->isChecked())
         {
             for (int i = 0; i < 20; i++)
