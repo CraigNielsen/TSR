@@ -73,6 +73,9 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
     //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
     //return true for triangle, false if its a circle
     // get the feature row of test vector
+    namedWindow( "tri",2);
+    imshow("tri",src_);
+    waitKey(timeout);
     if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;}
     Mat triangle=imread("/home/craig/Pictures/training_images/shape/tri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangle=triangle>80;
@@ -83,6 +86,18 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
     Mat combine2=src_.clone();
     bitwise_and(triangle,src_,combine);
     bitwise_and(circle,src_,combine2);
+
+//    imshow("tri",triangle);
+//    waitKey(0);
+//    imshow("tri",circle);
+//    waitKey(0);
+    imshow("tri",src_);
+    waitKey(0);
+//    imshow("tri",combine);
+//    waitKey(0);
+//    imshow("tri",combine2);
+//    waitKey(0);
+
     int r=countNonZero(combine);
     int c=countNonZero(combine2);
     if (r>c)
@@ -94,11 +109,11 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
     return false;
 
 
-//    dlib::matrix<double,tImageCols,1>  m;
-//    get1DFeatureRow(src_,m);
-//    // get the label of the test vecto
-//    for (int i =0 ; i< m.size() ; i++){
-//    }
-//    cout << "predicted label: "<< df3(m)<< endl;
+    dlib::matrix<double,tImageCols,1>  m;
+    get1DFeatureRow(src_,m);
+    // get the label of the test vecto
+    for (int i =0 ; i< m.size() ; i++){
+
+    cout << "dlib predicted label: "<< df3(m)<< endl;}
 //    samples.pop_back();
 }

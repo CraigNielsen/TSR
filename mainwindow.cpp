@@ -5,7 +5,7 @@ using namespace std;
 
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
-#define VIDEO_PATH "/home/craig/Videos/1.avi"
+#define VIDEO_PATH "/home/craig/Videos/22.avi"
 
 void MainWindow::setInitVariables()
 {
@@ -14,10 +14,23 @@ void MainWindow::setInitVariables()
 
     roiPath="/home/craig/Pictures/training_images/ROI/";
     writeROI=false;
+    showdetections=true;
     bitwise_shape=true;
     size_= cv::Size(10,10);
     name=1;
     svm.load("/home/craig/scripts/road1.xml"); // loading
+    triangleSign=imread("/home/craig/Pictures/test_images/tri.png",CV_LOAD_IMAGE_COLOR);
+    circleSign=imread("/home/craig/Pictures/test_images/circ.jpg",CV_LOAD_IMAGE_COLOR);
+
+    if(!triangleSign.data){(cout<<"no trianglesign"<<endl);}
+    if(!circleSign.data){(cout<<"no circlesign");}
+
+    cout<<"tri channels "<<triangleSign.rows<< endl;
+    cout<<"circle rows:  "<<circleSign.rows<< endl;
+    Size s=Size(50,50);
+    cv::resize(triangleSign,triangleSign,s,0,0,INTER_NEAREST);
+    cv::resize(circleSign,circleSign,s,0,0,INTER_NEAREST);
+
     //_____________LOAD  DLIB CLASSIFIER _________________
 
 
@@ -162,8 +175,8 @@ void MainWindow::on_open_clicked()  //__________________________________________
 //        namedWindow("test",2);
 //        imshow("test",src_gray);
 
-        namedWindow("Source Clean",CV_WINDOW_FREERATIO);
-        cv::imshow("Source Clean", src_clean);
+//        namedWindow("Source Clean",CV_WINDOW_FREERATIO);
+//        cv::imshow("Source Clean", src_clean);
 
 //        namedWindow( "Contours2", CV_WINDOW_FREERATIO );
 //        imshow( "Contours2", SrcRoi );
@@ -173,7 +186,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
 //        namedWindow("processed",CV_WINDOW_FREERATIO);
 //        cv::imshow("processed",framout);
 
-        cv::waitKey(2);                                                                               // or press key to stop
+        cv::waitKey(timeout);                                                                               // or press key to stop
         if (cv::waitKey(10)>=0)
             stop= true;
     }
@@ -285,20 +298,21 @@ void MainWindow::on_checkBox_clicked()
 
 void MainWindow::on_finalThresholdSlider_2_valueChanged(int value)
 {
-    ui->finalThresholdLabel->setText(QString::number(value));
-    thresh_Low=value;
-    Mat grayResult;
-    cvtColor(croppedImageResultResized, grayResult, CV_BGR2GRAY);
-    equalizeHist(grayResult, grayResult);
-    blur(grayResult, grayResult, Size(3,3));
+//    ui->finalThresholdLabel->setText(QString::number(value));
+//    thresh_Low=value;
+//    Mat grayResult;
+//    cvtColor(croppedImageResultResized, grayResult, CV_BGR2GRAY);
+//    equalizeHist(grayResult, grayResult);
+//    blur(grayResult, grayResult, Size(3,3));
 
-    bitwise_not ( grayResult, grayResult );
+//    bitwise_not ( grayResult, grayResult );
 
-    threshold(grayResult,grayResult,thresh_Low,thresh_High,0);
+//    threshold(grayResult,grayResult,thresh_Low,thresh_High,0);
 
-//        invertGrayImage(grayResult);
+////        invertGrayImage(grayResult);
 
-    showImage(grayResult,"final cropped image");
+//    showImage(grayResult,"final cropped image");
+    timeout=value;
 }
 
 void MainWindow::on_nameSpin_valueChanged(int arg1)
@@ -359,3 +373,5 @@ void MainWindow::on_maxA_valueChanged(int arg1)
 {
     maxA=arg1;
 }
+
+

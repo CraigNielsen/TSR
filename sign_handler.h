@@ -24,14 +24,15 @@ public:
 
         //add new shape to the object.
     void add(cv::Point p, string label, int frameNo);//check not already a point, add if not "inArea()",otherwise update current location and  add label
-        //object can search its current items and compare based on x,y coordinates
+    map<int,string> checklabels();
+    //object can search its current items and compare based on x,y coordinates
 
 
 private:
     int name=1;
     int inArea(cv::Point & p); //return the value of the key for same location
     void checkframe(int frameNo);
-    map<int,string> checklabels();
+
     //use position to find last shape in same position.
 
     //if object has 5 same shapes, classify(bring up image)

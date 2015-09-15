@@ -81,6 +81,8 @@ bool testCentre(Mat & temp)
 //    Mat temp=src_.clone();
 //    cv::resize(temp,temp,size_,0,0,INTER_LINEAR);
 
+//    namedWindow("testcentre",2);
+//    imshow("testcentre",temp);
     int rws=temp.rows/2;
     int cls=temp.cols/2;
     int color=(int)temp.at<uchar>(rws,cls);

@@ -43,7 +43,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     /// Find contours
     findContours( bw1, contours1, hierarchy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
-    ///________________________CENTERS OF MASS______________________________________________
+    ///________________________CENTERS OF MASS OF CONTOURS______________________________________________
     /// Get the moments
     vector<Moments> mu(contours1.size() );
     vector<bool> centreRed(contours.size());
@@ -53,6 +53,11 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     ///  Get the mass centers:
     vector<Point2f> mc( contours1.size() );
     Scalar color = Scalar( 255, 0, 0 );
+
+    ///search_____________________________________________________________________________
+    vector<Point2f> pointsForSearch; //Insert all 2D points to this vector
+
+
 
     for( int i = 0; i < contours1.size(); i++ )
     {
@@ -100,16 +105,34 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
             else
             {
                 centreRed[i]=false;
+                pointsForSearch.push_back(mc[i]);
             }
 
         }
 
     }
+    ///search____________________________________________________________________________
+    //iterate through all centres of mass. and querie closest points to each point
+    //  add a group to a vector if more than 1 NN
+    // search vector group to see if current point exists in group. (skip if yes, search if no)
+    int range=50;
+    int numOfPoints=5;
+    flann::KDTreeIndexParams indexParams;
+    flann::Index kdtree(Mat(pointsForSearch).reshape(1), indexParams);
+    vector<float> query;
+    query.push_back(pnt.x); //Insert the 2D point we need to find neighbours to the query
+    query.push_back(pnt.y); //Insert the 2D point we need to find neighbours to the query
+    vector<int> indices;
+    vector<float> dists;
+    kdtree.radiusSearch(query, indices, dists, range, numOfPoints);
+    ///___________________________________________________________________________________
 ///_______________________________________________________________________________________
 //    cv::findContours( src_, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
 
     /// Find the rotated rectangles and ellipses for each contour
+    /// first check if contours are close (for far away signs)
+
     vector<Rect> minRect( contours1.size() );
     vector<RotatedRect> minEllipse( contours1.size() );
 
@@ -160,6 +183,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     catch (exception){cout<<"caught rectangle creation exception"<<endl;}
 
                     Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
+                    Mat q= SrcRoi_clean.clone();
 
 
  /* ROI SIZE*/
@@ -167,16 +191,15 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     Mat ri=imageROI.clone();
 
                     cv::resize(imageROI,imageROI,size_,0,0,INTER_NEAREST);
-                    namedWindow("roi",2);
+
                     Mat temp=imageROI.clone();
                     bool checkedCenter=preProcessROI(temp);
+
                     if (checkedCenter && writeROI)
                     {
-
                         namedWindow("writing",2);
                         imshow("writing",imageROI);
                         waitKey(200);
-
                         imwrite(roiPath+std::to_string(name)+".png",imageROI);
                         name+=1;
                     }
@@ -186,18 +209,54 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     {
                         try{tri=getShape(imageROI,ri);}//true if triangle, false if circle
                         catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
-
-                        imshow("roi",ri);
-                        waitKey(100);
+                        namedWindow("roi",2);
+                        cout<<"triangle is "<<tri<<endl;
+//                        imshow("roi",ri);
+//                        waitKey(timeout);
+//                        imshow("roi",imageROI);
+//                        waitKey(timeout);
                     }
                     // get centre position of rect in source image
-                    Mat ir1= (SrcRoi_clean(minRect[i]));
-                    Size s;
-                    Point centre;
-                    ir1.locateROI(s,centre);
-                    string label;
-                    (tri) ? (label="tri") : (label="circle") ;
-                    signs.add(centre,label,frameNo);
+                    if (checkedCenter && showdetections)
+                    {
+                        Mat ir1= (SrcRoi_clean(minRect[i]));
+                        Size s;
+                        Point centre;
+                        ir1.locateROI(s,centre);
+                        string label;
+                        (tri) ? (label="tri") : (label="circle") ;
+
+                        signs.add(centre,label,frameNo);
+                        //check is any labels are set yet
+                        map<int,string> mp=signs.checklabels();
+                        map<int,string>::iterator i;
+                        if (mp.size()>1){
+                            for (i=mp.begin();i!=mp.end();i++)
+                            {
+                                //set image at position using key
+                                int key = i-> first;
+                                string val=i->second;
+                                Point pos=signs.locations[key];
+                                cout<<pos.x<<" "<<pos.y<<endl;
+                                cout<<q.cols<<" "<<q.rows<<endl;
+                                cout<<triangleSign.channels()<<" "<<q.channels()<<endl;
+                                (val=="triangle") ? (triangleSign.copyTo(q(Rect(pos.x,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(q(Rect(pos.x,pos.y,circleSign.rows,circleSign.cols)))) ;
+
+                                cout<<"value: "<<val<<endl;
+                            }
+
+                            int fontface = cv::FONT_HERSHEY_SIMPLEX;
+                            double scale = 2;
+                            int thickness = 3;
+                            cv::putText(q,to_string(frameNo),Point (100,100), fontface, scale, CV_RGB(0,0,255), thickness, 8);
+                            namedWindow("roi",2);
+                            imshow("roi",q);
+                            waitKey(timeout);
+                        }
+
+                    }
+//                    imshow("roi",SrcRoi_clean);
+
                     //use position to find last shape in same position.
                     //add new shape to the object.
                     //if object has 5 same shapes, classify(bring up image)

@@ -26,8 +26,8 @@ void MainWindow::getRed_inRGB(Mat &src)
 
 
     int r,g,b;
-    int delRG=70;
-    int delRB=70;
+    int delRG=50;
+    int delRB=50;
 //    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC3);
 //    Mat output = SrcRoi.clone();
     for (int i=0; i<src.rows ; i++)
@@ -77,7 +77,7 @@ void MainWindow::benallallRGB()
         Vec3b* opixel = blank.ptr<Vec3b>(i);
         Vec3b* pixel = SrcRoi.ptr<Vec3b>(i);
 
-        for (int j=0 ; j<SrcRoi.cols-4 ; j+=2)
+        for (int j=0 ; j<SrcRoi.cols-2 ; j+=2)
         {
             r= pixel[j][2];
             g= pixel[j][1];

@@ -24,12 +24,7 @@ void sign_handler::add(cv::Point p, string label,int frameNo)
     }
     //check the frames
     checkframe(frameNo);
-    map<int,string> mp=checklabels();
-    map<int,string>::iterator i;
-    for (i=mp.begin();i!=mp.end();i++)
-    {
-        cout<<"value: "<<i->second<<endl;
-    }
+
 
 }
 
@@ -38,7 +33,7 @@ int sign_handler::inArea(cv::Point &p)
     for (locit i=locations.begin(); i!=locations.end();i++)
     {
         //check distances for all keys, if within threshold, update point, add label
-        if (abs(locations[i->first].x-p.x)<50 && abs(locations[i->first].y-p.y)<50)
+        if (abs(locations[i->first].x-p.x)<200 && abs(locations[i->first].y-p.y)<200)
         {
             return i->first;
         }
@@ -71,7 +66,7 @@ map<int,string> sign_handler::checklabels()
         vector<string> vs=i->second;
 
         //count values in vectors with size bigger than 5
-        if(vs.size()>5)   
+        if(vs.size()>4)
         {
 //            cout<<i->first<<" name of the sign "<<endl;
             int tricount=0;

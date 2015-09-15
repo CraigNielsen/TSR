@@ -55,6 +55,7 @@ class MainWindow : public QMainWindow
     //______________________________________________________________________
     bool writeROI=true;
     bool bitwise_shape=true;
+    bool showdetections=true;
     string roiPath;
     cv::Size size_;
     bool preProcessROI(Mat &src);
@@ -63,6 +64,7 @@ class MainWindow : public QMainWindow
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
     int name=0;
+    Mat triangleSign,circleSign;
     trainerObject trainer=trainerObject();
     cv::Rect roi;
     float lowHeightSquared=1/10.;
@@ -131,7 +133,7 @@ public:
     QImage ProPic;
     void detectROIShapes_one();
     void detectShapes();
-
+    int timeout=100;
     void getRed_inRGB(Mat &src);
     void benallallRGB();
 private slots:
@@ -187,6 +189,8 @@ private slots:
     void on_minA_valueChanged(int arg1);
 
     void on_maxA_valueChanged(int arg1);
+
+    void on_finalThresholdSlider_2_actionTriggered(int action);
 
 private:
     Ui::MainWindow *ui;
