@@ -75,12 +75,17 @@ void MainWindow::finalCrop(Mat &image)
 //    showImage(croppedImage,"testing the crop");
 
 }
-bool testCentre(Mat & src_)
+bool testCentre(Mat & temp)
 {
+//    cv::Size size_= cv::Size(10,10);
+//    Mat temp=src_.clone();
+//    cv::resize(temp,temp,size_,0,0,INTER_LINEAR);
 
-    int rws=src_.rows/2;
-    int cls=src_.cols/2;
-    int color=(int)src_.at<uchar>(rws,cls);
+//    namedWindow("testcentre",2);
+//    imshow("testcentre",temp);
+    int rws=temp.rows/2;
+    int cls=temp.cols/2;
+    int color=(int)temp.at<uchar>(rws,cls);
     if (color == 255){return false;}
     else {return true;}
 
@@ -101,11 +106,11 @@ bool MainWindow::preProcessROI(Mat &src_)
     src_=src_>80;
 
 //    cv::GaussianBlur(src_,src_,Size(1,1),1);
-    if (size_.height>=30){
-        Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
-        //    morphologyEx(src_,src_,MORPH_CLOSE,element);
-        morphologyEx( src_, src_,  MORPH_OPEN, element );   //output is  (Src is always RGB)
-    }
+//    if (size_.height>=30){
+//        Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
+//        //    morphologyEx(src_,src_,MORPH_CLOSE,element);
+//        morphologyEx( src_, src_,  MORPH_OPEN, element );   //output is  (Src is always RGB)
+//    }
     src_=src_>80;
 
     bool yes=testCentre(src_);

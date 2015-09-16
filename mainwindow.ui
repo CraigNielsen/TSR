@@ -525,7 +525,13 @@
         <item row="0" column="0">
          <widget class="QSlider" name="finalThresholdSlider_2">
           <property name="maximum">
-           <number>254</number>
+           <number>1000</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="sliderPosition">
+           <number>1</number>
           </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -922,7 +928,7 @@
      <x>0</x>
      <y>0</y>
      <width>1148</width>
-     <height>24</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>

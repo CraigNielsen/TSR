@@ -9,13 +9,14 @@
 #include <QLabel>
 #include "imagemanipulator.h"
 #include "trainerobject.h"
+#include "sign_handler.h"
 #include <dlib/svm_threaded.h>
 #include <iostream>
 #include <vector>
 #include <dlib/rand.h>
 
 using namespace cv;
-
+#define print(a) cout<<a<<endl;
 
 
 namespace Ui {
@@ -44,13 +45,18 @@ class MainWindow : public QMainWindow
     > df3;
     void convertToDlib(Mat & src_);
     Mat featureRowTemp_;
-    void getShape(Mat & src_);
+    bool getShape(Mat & src_, Mat &roii);
     void get1DFeatureRow(Mat & img_mat, dlib::matrix<double, tImageCols, 1> & m);
     std::vector<sample_type> samples;
     void printOutMatrix(Mat & in_);
+    void cropTraingle(Mat &BW, Mat & roii);
+    sign_handler signs;
+    int frameNo=0;
     //______________________________________________________________________
-    bool writeBackgrounds=false;
     bool writeROI=true;
+    bool bitwise_shape=true;
+    bool showdetections=true;
+    string roiPath;
     cv::Size size_;
     bool preProcessROI(Mat &src);
     void selectROI(Mat &src_, Mat &dst_, int thickness, bool rect=false);
@@ -58,6 +64,7 @@ class MainWindow : public QMainWindow
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
     int name=0;
+    Mat triangleSign,circleSign;
     trainerObject trainer=trainerObject();
     cv::Rect roi;
     float lowHeightSquared=1/10.;
@@ -126,7 +133,7 @@ public:
     QImage ProPic;
     void detectROIShapes_one();
     void detectShapes();
-
+    int timeout=100;
     void getRed_inRGB(Mat &src);
     void benallallRGB();
 private slots:
@@ -182,6 +189,8 @@ private slots:
     void on_minA_valueChanged(int arg1);
 
     void on_maxA_valueChanged(int arg1);
+
+    void on_finalThresholdSlider_2_actionTriggered(int action);
 
 private:
     Ui::MainWindow *ui;

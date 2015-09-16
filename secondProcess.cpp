@@ -43,7 +43,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     /// Find contours
     findContours( bw1, contours1, hierarchy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
-    ///________________________CENTERS OF MASS______________________________________________
+    ///________________________CENTERS OF MASS OF CONTOURS______________________________________________
     /// Get the moments
     vector<Moments> mu(contours1.size() );
     vector<bool> centreRed(contours.size());
@@ -53,6 +53,11 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     ///  Get the mass centers:
     vector<Point2f> mc( contours1.size() );
     Scalar color = Scalar( 255, 0, 0 );
+
+    ///search_____________________________________________________________________________
+    vector<Point2f> pointsForSearch; //Insert all 2D points to this vector
+
+
 
     for( int i = 0; i < contours1.size(); i++ )
     {
@@ -100,20 +105,39 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
             else
             {
                 centreRed[i]=false;
+                pointsForSearch.push_back(mc[i]);
             }
 
         }
 
     }
+    ///search____________________________________________________________________________
+    //iterate through all centres of mass. and querie closest points to each point
+    //  add a group to a vector if more than 1 NN
+    // search vector group to see if current point exists in group. (skip if yes, search if no)
+    int range=50;
+    int numOfPoints=5;
+    flann::KDTreeIndexParams indexParams;
+    flann::Index kdtree(Mat(pointsForSearch).reshape(1), indexParams);
+    vector<float> query;
+    query.push_back(pnt.x); //Insert the 2D point we need to find neighbours to the query
+    query.push_back(pnt.y); //Insert the 2D point we need to find neighbours to the query
+    vector<int> indices;
+    vector<float> dists;
+    kdtree.radiusSearch(query, indices, dists, range, numOfPoints);
+    ///___________________________________________________________________________________
 ///_______________________________________________________________________________________
 //    cv::findContours( src_, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
 
     /// Find the rotated rectangles and ellipses for each contour
+    /// first check if contours are close (for far away signs)
+
     vector<Rect> minRect( contours1.size() );
     vector<RotatedRect> minEllipse( contours1.size() );
 
-    for( int i = 0; i < contours1.size(); i++ ){
+    for( int i = 0; i < contours1.size(); i++ )
+    {
         //check size of min area rect for contours
         //check if centre is red
         if (! centreRed[i])
@@ -134,89 +158,117 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
        {
         if (!centreRed[i]){
             int a=(minAreaRect( Mat(contours1[i]) ).size.area());
-            if ( a > minA && a < maxA ){
+            if ( a > minA && a < maxA )
+            {
                 Scalar color = Scalar( 255, 255, 255 );
                 // contour
                 drawContours( dst_, contours1, i, color, 5, 8, vector<Vec4i>(), 0, Point() );
                 // ellipse
                 if (!rect){
                     ellipse( cnt_img, minEllipse[i], color, thickness, 8 );}
+
+
+
                 if (rect){
+                    //draw ellipse
                     RotatedRect re= RotatedRect(minEllipse[i].center,Size2f(minEllipse[i].size.width*1.2,minEllipse[i].size.height*1.2),minEllipse[i].angle);
-                    ellipse( dst_, re, color, thickness, 8 );}
-                // rotated rectangle
-                if (rect){
+                    ellipse( dst_, re, color, thickness, 8 );
+                //_____________________________________________________________________________________
+                //draw rectangle
                     rectangle( dst_, minRect[i].tl(), minRect[i].br(), color, 2, 8, 0 );
                     //get ROI, test ROI, printout Class
                     Rect r1=minRect[i];
                     Rect ro;
                     try{ro =Rect(r1.x,r1.y,r1.width,r1.height);}
-                    catch (exception){cout<<"caught"<<endl;}
+                    catch (exception){cout<<"caught rectangle creation exception"<<endl;}
 
                     Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
-                    if (writeROI)
-                    {
-                        namedWindow("test",2);
-                        imshow("test",imageROI);
-                        waitKey(200);
-                    }
+                    Mat q= SrcRoi_clean.clone();
+
 
  /* ROI SIZE*/
 
-                    if (writeBackgrounds)
-                    {
-                        Mat imr;
-                        try{imr= SrcRoi_clean(ro).clone(); cv::resize(imr,imr,size_,0,0,INTER_AREA);}
-                        catch(exception){cout<<"Caught"<<endl;}
-
-                        imwrite("/home/craig/QT/scripts/all_signs/"+std::to_string(name)+".png",imr);
-                        name+=1;
-                    }
-//                    namedWindow("4",2);
-//                    imshow("2",SrcRoi_clean);
                     Mat ri=imageROI.clone();
-                    cv::resize(imageROI,imageROI,size_,0,0,INTER_LINEAR);
-                    namedWindow("resize",2);
 
-                    if (writeROI)
+                    cv::resize(imageROI,imageROI,size_,0,0,INTER_NEAREST);
+
+                    Mat temp=imageROI.clone();
+                    bool checkedCenter=preProcessROI(temp);
+
+                    if (checkedCenter && writeROI)
                     {
-                        imwrite("/home/craig/Pictures/training_images/ROI/"+std::to_string(name)+".png",imageROI);
+                        namedWindow("writing",2);
+                        imshow("writing",imageROI);
+                        waitKey(200);
+                        imwrite(roiPath+std::to_string(name)+".png",imageROI);
                         name+=1;
                     }
-                    if (preProcessROI(imageROI)) //checks if center is red or not
+                    bool tri;
+                    //check centre is not red, then find shape classify for the rectangle(roi and position)
+                    if (preProcessROI(imageROI) && bitwise_shape) //checks if center is red or not
                     {
-                        getShape(imageROI);
-                        imshow("resize",ri);
-                        waitKey(100);
+                        try{tri=getShape(imageROI,ri);}//true if triangle, false if circle
+                        catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
+                        namedWindow("roi",2);
+                        cout<<"triangle is "<<tri<<endl;
+//                        imshow("roi",ri);
+//                        waitKey(timeout);
+//                        imshow("roi",imageROI);
+//                        waitKey(timeout);
                     }
-                    //                 CleanUpROI(imageROI);
-                    //                 namedWindow("region",2);
-                    //                 imshow("region",imageROI);
-                    //                 Mat  img_mat3 = Mat(1,2700,CV_32FC1);
-                    //                 string path_ ="/home/craig/scripts/temp/0 fuck.jpg";
-                    //                 trainer.getFeatureRow(path_,img_mat3,0);
-                    ///_____________________________________________________________________________PREDICTIONS WITH SVM_______________________________
-                    //                 Mat img_mat4 =Mat(1,2700,CV_32FC1);
-                    ////                 Mat tester=imread("/home/craig/scripts/training/110/1.jpg");
-                    //                 trainer.makeFeatureRow(imageROI,img_mat4);
-
-                    ////                 trainer.io.print_out_Mat(img_mat3);
-                    //                 cout<<"\n  ______ \n "<<endl;
-                    ////                 trainer.io.print_out_Mat(img_mat4);
-
-                    //                 float answer1= svm.predict(img_mat4);
-                    //                 cout<<answer1<<endl;
-                    if (writeBackgrounds)
+                    // get centre position of rect in source image
+                    if (checkedCenter && showdetections)
                     {
+                        Mat ir1= (SrcRoi_clean(minRect[i]));
+                        Size s;
+                        Point centre;
+                        ir1.locateROI(s,centre);
+                        string label;
+                        (tri) ? (label="tri") : (label="circle") ;
+
+                        signs.add(centre,label,frameNo);
+                        //check is any labels are set yet
+                        map<int,string> mp=signs.checklabels();
+                        map<int,string>::iterator i;
+                        if (mp.size()>1){
+                            for (i=mp.begin();i!=mp.end();i++)
+                            {
+                                //set image at position using key
+                                int key = i-> first;
+                                string val=i->second;
+                                Point pos=signs.locations[key];
+                                cout<<pos.x<<" "<<pos.y<<endl;
+                                cout<<q.cols<<" "<<q.rows<<endl;
+                                cout<<triangleSign.channels()<<" "<<q.channels()<<endl;
+                                (val=="triangle") ? (triangleSign.copyTo(q(Rect(pos.x,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(q(Rect(pos.x,pos.y,circleSign.rows,circleSign.cols)))) ;
+
+                                cout<<"value: "<<val<<endl;
+                            }
+
+                            int fontface = cv::FONT_HERSHEY_SIMPLEX;
+                            double scale = 2;
+                            int thickness = 3;
+                            cv::putText(q,to_string(frameNo),Point (100,100), fontface, scale, CV_RGB(0,0,255), thickness, 8);
+                            namedWindow("roi",2);
+                            imshow("roi",q);
+                            waitKey(timeout);
+                        }
 
                     }
-                    //                 waitKey(100);
+//                    imshow("roi",SrcRoi_clean);
+
+                    //use position to find last shape in same position.
+                    //add new shape to the object.
+                    //if object has 5 same shapes, classify(bring up image)
+                    //object can contain areas for possible shapes
+                    //object can contain each areas past shape classifications..
+                    //object can handle showing sign on screen
+                    //object can search its current items and compare based on x,y coordinates
+                    //every time a position is checked, the object will update position and give a new label.
+                    //object will remove possibles if 10 frames pass without close detection
+
                 }
             }
-//             Point2f rect_points[4]; minRect[i].points( rect_points );
-//             for( int j = 0; j < 4; j++ )
-//                line( dst_, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );}
-       }}
-
-
+        }
+    }
 }
