@@ -6,9 +6,9 @@
 #include <vector>
 #include <iostream>
 
-#define print(a) cout<<a<<endl;
-#define print(a,b,c) cout<<a<<" "<<b<<" "<<c<<endl;
-#define print(a,b) cout<<a<<" "<<b<<endl;
+//#define print(a) cout<<a<<endl;
+//#define print(a,b,c) cout<<a<<" "<<b<<" "<<c<<endl;
+//#define print(a,b) cout<<a<<" "<<b<<endl;
 using namespace std;
 typedef map<int,cv::Point> loc;
 typedef loc::iterator locit;

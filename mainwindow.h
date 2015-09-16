@@ -14,7 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <dlib/rand.h>
-
+#include <opencv2/flann/flann.hpp>
 using namespace cv;
 #define print(a) cout<<a<<endl;
 

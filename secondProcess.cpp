@@ -115,16 +115,29 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     //iterate through all centres of mass. and querie closest points to each point
     //  add a group to a vector if more than 1 NN
     // search vector group to see if current point exists in group. (skip if yes, search if no)
-    int range=50;
-    int numOfPoints=5;
-    flann::KDTreeIndexParams indexParams;
-    flann::Index kdtree(Mat(pointsForSearch).reshape(1), indexParams);
-    vector<float> query;
-    query.push_back(pnt.x); //Insert the 2D point we need to find neighbours to the query
-    query.push_back(pnt.y); //Insert the 2D point we need to find neighbours to the query
     vector<int> indices;
     vector<float> dists;
-    kdtree.radiusSearch(query, indices, dists, range, numOfPoints);
+    if (mc.size()>1)
+    {
+    for (vector<Point2f>::iterator it = mc.begin();it!=mc.end();it++)
+    {
+        int range=50;
+        int numOfPoints=5;
+        flann::KDTreeIndexParams indexParams;
+        flann::Index kdtree(Mat(pointsForSearch).reshape(1), indexParams);
+        vector<float> query;
+        query.push_back((*it).x); //Insert the 2D point we need to find neighbours to the query
+        query.push_back((*it).y); //Insert the 2D point we need to find neighbours to the query
+
+        kdtree.radiusSearch(query, indices, dists, range, numOfPoints);
+        cout << " point :"<< (*it)  << endl;
+    }
+    }
+    for (vector<int>::iterator it = indices.begin();it!=indices.end();it++)
+    {
+        cout<<"position: "<<*it<<" is point: "<<pointsForSearch.at(*it) << " at distance: "<< dists.at(*it) << endl;
+    }
+    cout<<"finished"<<endl;
     ///___________________________________________________________________________________
 ///_______________________________________________________________________________________
 //    cv::findContours( src_, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
