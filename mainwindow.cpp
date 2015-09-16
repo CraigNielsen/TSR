@@ -5,7 +5,7 @@ using namespace std;
 
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
-#define VIDEO_PATH "/home/craig/Videos/1.avi"
+#define VIDEO_PATH "/home/craig/Videos/2.avi"
 
 void MainWindow::setInitVariables()
 {
