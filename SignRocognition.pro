@@ -49,7 +49,9 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 LIBS += `pkg-config opencv --libs`
-
+LIBS += -pthread
+CONFIG += link_pkgconfig
+PKGCONFIG += x11
 
 
 

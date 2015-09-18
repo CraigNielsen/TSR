@@ -6,7 +6,7 @@ using namespace std;
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
-#define VIDEO_PATH "/home/craig/Videos/long.mp4"
+#define VIDEO_PATH "/home/craig/Videos/1.avi"
 
 
 void MainWindow::setInitVariables()
@@ -20,7 +20,7 @@ void MainWindow::setInitVariables()
     bitwise_shape=true;
     size_= cv::Size(10,10);
     name=1;
-    svm.load("/home/craig/scripts/road1.xml"); // loading
+
     triangleSign=imread("/home/craig/Pictures/test_images/tri.png",CV_LOAD_IMAGE_COLOR);
     circleSign=imread("/home/craig/Pictures/test_images/circ.jpg",CV_LOAD_IMAGE_COLOR);
 
@@ -35,17 +35,17 @@ void MainWindow::setInitVariables()
 
     //_____________LOAD  DLIB CLASSIFIER _________________
 
+//    svm.load("/home/craig/scripts/road1.xml"); // loading
+//    // load the function back in from disk and store it in df3.
+//    try {
+//    dlib::deserialize("df2.dat") >> df3;
+//    }
+//    catch (exception)
+//    {
+//        cout<<"is the .dat file for classifier dlib in the built directory?";
+//    }
 
-    // load the function back in from disk and store it in df3.
-    try {
-    dlib::deserialize("df2.dat") >> df3;
-    }
-    catch (exception)
-    {
-        cout<<"is the .dat file for classifier dlib in the built directory?";
-    }
-
-    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
+//    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
     //____________________________________________________
 
     roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);
@@ -118,6 +118,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
 
 
     setInitVariables();
+    cout<<"done here"<<endl;
     bool stop = false;
 
     while (!stop) {                                                             // for all frames in video
@@ -180,7 +181,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
 //        namedWindow("Source Clean",CV_WINDOW_FREERATIO);
 //        cv::imshow("Source Clean", src_clean);
 
-        namedWindow( "Contours2", CV_WINDOW_FREERATIO );
+        namedWindow( "Contours2", 2 );
         imshow( "Contours2", SrcRoi );
 
 

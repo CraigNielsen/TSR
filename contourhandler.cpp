@@ -7,7 +7,7 @@ contourHandler::contourHandler()
 void contourHandler::getMassCentres(_Contours & contours1, _Points & mc )
 {
     ///________________________CENTERS OF MASS OF CONTOURS______________________________________________
-    int cont=cont;
+    int cont=contours1.size();
     vector<Moments> mu( cont);
     for( int i = 0; i < cont; i++ )
      { mu[i] = moments( contours1[i], false ); }
@@ -28,7 +28,7 @@ void contourHandler::removeContourForCentreWithColour(Mat fromImage,_Points & ce
     /// the colour is set inside the colour setter (still need to make)
 
     vector<Point2f> pointsForSearch;
-    vector<bool> centreRed(contours.size());
+//    vector<bool> centreRed(contours.size());
     int cont=contours.size();
     for( int i = 0; i < cont; i++ )
     {
@@ -37,10 +37,10 @@ void contourHandler::removeContourForCentreWithColour(Mat fromImage,_Points & ce
 
         //checks four points around the centre
 
-        Vec3b color1 = fromImage.at<Vec3b>(centres[i].x,centres[i].y);
-        Vec3b color2 = fromImage.at<Vec3b>(centres[i].x+2,centres[i].y+2);
-        Vec3b color3 = fromImage.at<Vec3b>(centres[i].x-2,centres[i].y-2);
-        Vec3b color4 = fromImage.at<Vec3b>(centres[i].x+1,centres[i].y);
+        Vec3b color1 = fromImage.at<Vec3b>(centres[i].y,centres[i].x);
+        Vec3b color2 = fromImage.at<Vec3b>(centres[i].y+2,centres[i].x+2);
+        Vec3b color3 = fromImage.at<Vec3b>(centres[i].y-2,centres[i].x-2);
+        Vec3b color4 = fromImage.at<Vec3b>(centres[i].y+1,centres[i].x);
 
         uchar r= color1[2];
         uchar g= color1[1];
@@ -65,7 +65,7 @@ void contourHandler::removeContourForCentreWithColour(Mat fromImage,_Points & ce
              (r4 > b4  && (r4-b4)>80  && r4 > g4  && (r4-g4)>80 && r4>50 )
              )
         {
-            centreRed[i]=true;
+//            centreRed[i]=true;
             //can delete contour here
 //            vec.erase(vec.begin() + index);
             contours.erase(contours.begin()+i);
@@ -74,7 +74,7 @@ void contourHandler::removeContourForCentreWithColour(Mat fromImage,_Points & ce
         }
         else
         {
-            centreRed[i]=false;
+//            centreRed[i]=false;
 //            pointsForSearch.push_back(mc[i]);
         }
 

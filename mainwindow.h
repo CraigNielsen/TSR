@@ -77,7 +77,7 @@ class MainWindow : public QMainWindow
     ImageManipulator im = ImageManipulator();
     Scalar_<double> contourColor = Scalar(255,255,128);
     void setInitVariables();
-    CvSVM svm;
+//    CvSVM svm;
     void invertGrayImage(Mat &image);
     void setupWindow2();
 //    ,linkImage1;
