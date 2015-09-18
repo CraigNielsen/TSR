@@ -44,82 +44,86 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
     findContours( bw1, contours1, hierarchy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
     ///________________________CENTERS OF MASS OF CONTOURS______________________________________________
+    vector<Point2f> centresOfMass( contours1.size() );
+    cHandler.getMassCentres(contours1,centresOfMass);
+    cHandler.removeContourForCentreWithColour(SrcRoi_clean,centresOfMass,contours1);
+
     /// Get the moments
     vector<Moments> mu(contours1.size() );
-    vector<bool> centreRed(contours.size());
+    vector<bool> centreRed(contours1.size());///______________________________________________________________changed contours to contours1
     for( int i = 0; i < contours1.size(); i++ )
      { mu[i] = moments( contours1[i], false ); }
 
-    ///  Get the mass centers:
-    vector<Point2f> mc( contours1.size() );
-    Scalar color = Scalar( 255, 0, 0 );
+//    ///  Get the mass centers:
+//    vector<Point2f> mc( contours1.size() );
+//    Scalar color = Scalar( 255, 0, 0 );
 
-    ///search_____________________________________________________________________________
-    vector<Point2f> pointsForSearch; //Insert all 2D points to this vector
-
-
-
-    for( int i = 0; i < contours1.size(); i++ )
-    {
-
-        mc[i] = Point2f( mu[i].m10/mu[i].m00 , mu[i].m01/mu[i].m00 );
-//        std::cout<<mc[i].x<<std::endl;
-        putText(SrcRoi, ".", mc[i], 1, 2, color, 10 );
-
-        if ( (mc[i].x + mc[i].y)>10  ) //bool check to see not NAN
-        {
-
-//            std::cout<<mc[i].x<<std::endl;
-//            std::cout<< foo(mc[i].x,mc[i].y) <<std::endl;
-
-            Vec3b color1 = SrcRoi_clean.at<Vec3b>(mc[i].x,mc[i].y);
-            Vec3b color2 = SrcRoi_clean.at<Vec3b>(mc[i].x+2,mc[i].y+2);
-            Vec3b color3 = SrcRoi_clean.at<Vec3b>(mc[i].x-2,mc[i].y-2);
-            Vec3b color4 = SrcRoi_clean.at<Vec3b>(mc[i].x+1,mc[i].y);
-
-            uchar r= color1[2];
-            uchar g= color1[1];
-            uchar b= color1[0];
-
-            uchar r2= color2[2];
-            uchar g2= color2[1];
-            uchar b2= color2[0];
-
-            uchar r3= color3[2];
-            uchar g3= color3[1];
-            uchar b3= color3[0];
-
-            uchar r4= color4[2];
-            uchar g4= color4[1];
-            uchar b4= color4[0];
+//    ///search_____________________________________________________________________________
+    vector<Point2f> pointsForSearch=centresOfMass; ///______________________________________________________________FOR NOW
 
 
-            if ( (r > b  && (r-b)>80  && r > g  && (r-g)>80 && r>50 ) ||
-                 (r2 > b2  && (r2-b2)>80  && r2> g2  && (r2-g2)>80 && r2>50 ) ||
-                 (r3 > b3  && (r3-b3)>80  && r3 > g3  && (r3-g3)>80 && r3>50 ) ||
-                 (r4 > b4  && (r4-b4)>80  && r4 > g4  && (r4-g4)>80 && r4>50 )
-                 )
-            {
-                centreRed[i]=true;
-            }
-            else
-            {
-                centreRed[i]=false;
-                pointsForSearch.push_back(mc[i]);
-            }
 
-        }
+//    for( int i = 0; i < contours1.size(); i++ )
+//    {
 
-    }
+//        mc[i] = Point2f( mu[i].m10/mu[i].m00 , mu[i].m01/mu[i].m00 );
+////        std::cout<<mc[i].x<<std::endl;
+//        putText(SrcRoi, ".", mc[i], 1, 2, color, 10 );
+
+//        if ( (mc[i].x + mc[i].y)>10  ) //bool check to see not NAN
+//        {
+
+////            std::cout<<mc[i].x<<std::endl;
+////            std::cout<< foo(mc[i].x,mc[i].y) <<std::endl;
+
+//            Vec3b color1 = SrcRoi_clean.at<Vec3b>(mc[i].x,mc[i].y);
+//            Vec3b color2 = SrcRoi_clean.at<Vec3b>(mc[i].x+2,mc[i].y+2);
+//            Vec3b color3 = SrcRoi_clean.at<Vec3b>(mc[i].x-2,mc[i].y-2);
+//            Vec3b color4 = SrcRoi_clean.at<Vec3b>(mc[i].x+1,mc[i].y);
+
+//            uchar r= color1[2];
+//            uchar g= color1[1];
+//            uchar b= color1[0];
+
+//            uchar r2= color2[2];
+//            uchar g2= color2[1];
+//            uchar b2= color2[0];
+
+//            uchar r3= color3[2];
+//            uchar g3= color3[1];
+//            uchar b3= color3[0];
+
+//            uchar r4= color4[2];
+//            uchar g4= color4[1];
+//            uchar b4= color4[0];
+
+
+//            if ( (r > b  && (r-b)>80  && r > g  && (r-g)>80 && r>50 ) ||
+//                 (r2 > b2  && (r2-b2)>80  && r2> g2  && (r2-g2)>80 && r2>50 ) ||
+//                 (r3 > b3  && (r3-b3)>80  && r3 > g3  && (r3-g3)>80 && r3>50 ) ||
+//                 (r4 > b4  && (r4-b4)>80  && r4 > g4  && (r4-g4)>80 && r4>50 )
+//                 )
+//            {
+//                centreRed[i]=true;
+//            }
+//            else
+//            {
+//                centreRed[i]=false;
+//                pointsForSearch.push_back(mc[i]);
+//            }
+
+//        }
+
+//    }
     ///search____________________________________________________________________________
     //iterate through all centres of mass. and querie closest points to each point
     //  add a group to a vector if more than 1 NN
     // search vector group to see if current point exists in group. (skip if yes, search if no)
     vector<int> indices;
     vector<float> dists;
-    if (mc.size()>1)
+    if (centresOfMass.size()>1)
     {
-    for (vector<Point2f>::iterator it = mc.begin();it!=mc.end();it++)
+    for (vector<Point2f>::iterator it = centresOfMass.begin();it!=centresOfMass.end();it++)
     {
         int range=50;
         int numOfPoints=5;

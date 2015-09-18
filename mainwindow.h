@@ -10,6 +10,7 @@
 #include "imagemanipulator.h"
 #include "trainerobject.h"
 #include "sign_handler.h"
+#include "contourhandler.h"
 #include <dlib/svm_threaded.h>
 #include <iostream>
 #include <vector>
@@ -60,6 +61,7 @@ class MainWindow : public QMainWindow
     cv::Size size_;
     bool preProcessROI(Mat &src);
     void selectROI(Mat &src_, Mat &dst_, int thickness, bool rect=false);
+    contourHandler cHandler;
     //____________________________Global________________________________________
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
