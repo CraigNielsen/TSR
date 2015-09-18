@@ -6,10 +6,8 @@
 
 QT       += core gui
 CONFIG += gnu++11
-CONFIG += link_pkgconfig
-PKGCONFIG += opencv
+
 QMAKE_CXXFLAGS += -std=c++11
-PKGCONFIG += x11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ComboGuiTest

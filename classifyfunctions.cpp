@@ -73,9 +73,9 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
     //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
     //return true for triangle, false if its a circle
     // get the feature row of test vector
-    namedWindow( "tri",2);
-    imshow("tri",src_);
-    waitKey(timeout);
+//    namedWindow( "tri",2);
+//    imshow("tri",src_);
+//    waitKey(timeout);
     if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;}
     Mat triangle=imread("/home/craig/Pictures/training_images/shape/tri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangle=triangle>80;
@@ -91,8 +91,8 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
 //    waitKey(0);
 //    imshow("tri",circle);
 //    waitKey(0);
-    imshow("tri",src_);
-    waitKey(0);
+//    imshow("tri",src_);
+//    waitKey(0);
 //    imshow("tri",combine);
 //    waitKey(0);
 //    imshow("tri",combine2);

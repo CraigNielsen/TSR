@@ -132,13 +132,15 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
         kdtree.radiusSearch(query, indices, dists, range, numOfPoints);
         cout << " point :"<< (*it)  << endl;
     }
+    cout<<"out of loop 1"<<endl;
     }
     for (vector<int>::iterator it = indices.begin();it!=indices.end();it++)
     {
-        cout<<"position: "<<*it<<" is point: "<<pointsForSearch.at(*it) << " at distance: "<< dists.at(*it) << endl;
+        cout<<"points size is : "<<pointsForSearch.size()<<" dists size: "<< dists.size()<< " but size of it pointers are: "<< *it <<endl;
+        cout<<"position: "<<*it<<" is point: "<<pointsForSearch.at(*it) << endl;
     }
     cout<<"finished"<<endl;
-    ///___________________________________________________________________________________
+///___________________________________________________________________________________
 ///_______________________________________________________________________________________
 //    cv::findContours( src_, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
@@ -164,18 +166,24 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
         }
     }
 
-
+    cout<<"finished rotated rects" <<endl;
     /// Draw contours + rotated rects + ellipses
 //    namedWindow("region",2);
-    for( int i = 0; i< contours1.size(); i++ )
+    cout<<contours.size()<<endl;
+    for( unsigned int i = 0; i< contours1.size(); i++ )
        {
+        cout<<"1:" <<endl;
         if (!centreRed[i]){
+
             int a=(minAreaRect( Mat(contours1[i]) ).size.area());
+            cout<<"1.5: "<<a<<endl;
             if ( a > minA && a < maxA )
             {
+                cout<<"1.8:" <<endl;
                 Scalar color = Scalar( 255, 255, 255 );
                 // contour
                 drawContours( dst_, contours1, i, color, 5, 8, vector<Vec4i>(), 0, Point() );
+                cout<<"1.9:" <<endl;
                 // ellipse
                 if (!rect){
                     ellipse( cnt_img, minEllipse[i], color, thickness, 8 );}
@@ -184,6 +192,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
 
                 if (rect){
                     //draw ellipse
+                    cout<<"2:" <<endl;
                     RotatedRect re= RotatedRect(minEllipse[i].center,Size2f(minEllipse[i].size.width*1.2,minEllipse[i].size.height*1.2),minEllipse[i].angle);
                     ellipse( dst_, re, color, thickness, 8 );
                 //_____________________________________________________________________________________
@@ -207,7 +216,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
 
                     Mat temp=imageROI.clone();
                     bool checkedCenter=preProcessROI(temp);
-
+                    cout<<"3:" <<endl;
                     if (checkedCenter && writeROI)
                     {
                         namedWindow("writing",2);
@@ -216,14 +225,19 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                         imwrite(roiPath+std::to_string(name)+".png",imageROI);
                         name+=1;
                     }
+                    cout<<"4:" <<endl;
                     bool tri;
                     //check centre is not red, then find shape classify for the rectangle(roi and position)
-                    if (preProcessROI(imageROI) && bitwise_shape) //checks if center is red or not
+                    bool checkC=preProcessROI(imageROI);
+                    cout<<"4.1: "<<checkC<<endl;
+                    cout<<"4.2: "<< (checkC && bitwise_shape) <<endl;
+                    if (checkC && bitwise_shape) //checks if center is red or not
                     {
+                        cout<<"5:" <<endl;
                         try{tri=getShape(imageROI,ri);}//true if triangle, false if circle
                         catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
-                        namedWindow("roi",2);
-                        cout<<"triangle is "<<tri<<endl;
+//                        namedWindow("roi",2);
+//                        cout<<"triangle is "<<tri<<endl;
 //                        imshow("roi",ri);
 //                        waitKey(timeout);
 //                        imshow("roi",imageROI);
@@ -232,6 +246,7 @@ void MainWindow::selectROI(Mat & src_,Mat & dst_,int thickness,bool rect){
                     // get centre position of rect in source image
                     if (checkedCenter && showdetections)
                     {
+                            cout<<"entered checked centre " <<endl;
                         Mat ir1= (SrcRoi_clean(minRect[i]));
                         Size s;
                         Point centre;

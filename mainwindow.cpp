@@ -6,7 +6,7 @@ using namespace std;
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
-#define VIDEO_PATH "/home/craig/Videos/2.avi"
+#define VIDEO_PATH "/home/craig/Videos/long.mp4"
 
 
 void MainWindow::setInitVariables()
@@ -180,8 +180,8 @@ void MainWindow::on_open_clicked()  //__________________________________________
 //        namedWindow("Source Clean",CV_WINDOW_FREERATIO);
 //        cv::imshow("Source Clean", src_clean);
 
-//        namedWindow( "Contours2", CV_WINDOW_FREERATIO );
-//        imshow( "Contours2", SrcRoi );
+        namedWindow( "Contours2", CV_WINDOW_FREERATIO );
+        imshow( "Contours2", SrcRoi );
 
 
 
