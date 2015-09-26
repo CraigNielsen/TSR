@@ -57,6 +57,7 @@ void sign_handler::checkframe(int frameNo)
 
 map<int,string> sign_handler::checklabels()
 {
+    //checks for position with more than 5 labels and tally up the label that wins
     //create a  map for labels etc.
     map<int,string> signs;
     //search for labelobject with more than 5 labels
@@ -68,7 +69,6 @@ map<int,string> sign_handler::checklabels()
         //count values in vectors with size bigger than 5
         if(vs.size()>4)
         {
-//            cout<<i->first<<" name of the sign "<<endl;
             int tricount=0;
             int circount=0;
             vector<string>::iterator j;

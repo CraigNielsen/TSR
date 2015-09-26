@@ -170,7 +170,6 @@ void MainWindow::on_GBlurAmtSlider_valueChanged(int value)
 void MainWindow::on_sobelKernalSizeSlider_valueChanged(int value)
 {
     value= value*2+1;
-    cout <<value<<endl;
     SobelKernalSize=value;
     ui->sobelKernalSizeSpinbox->setValue(value);
     switch (value){

@@ -46,9 +46,13 @@ void MainWindow::setInitVariables()
 //    }
 
 //    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
-    //____________________________________________________
+    //__________________ROI HEIGHT FOR SOURCE IMAGE__________________________________
+    int topx=srcCols/10;
+    int topy=srcRows/4;
+    int width=srcCols-2*topx;
+    int height=srcRows/3;
 
-    roi = cv::Rect(0,srcRows/4,srcCols-1,srcRows/3);
+    roi = cv::Rect(topx,topy,width,height);
     a=0;b=0;c=62;d=255;e=46;f=255;
     minA=200;
     maxA=20000;
