@@ -72,13 +72,32 @@ void contourHandler::removeContourForCentreWithColour(Mat fromImage,_Points & ce
                 centres.erase(centres.begin()+i);
 
             }
-            else
-            {
-                //            centreRed[i]=false;
-                //            pointsForSearch.push_back(mc[i]);
-            }
+            ///CHECK AREA HERE
+
 
         }
+    }
+}
+
+void contourHandler::removeContourswithArea(_Contours &contours, int area)
+{
+    ///iterate through the contours
+    /// check area of min area rect arounf the contour
+    /// remove contours  with an area larger than given area
+    for (_Contours::iterator it=contours.begin();it!=contours.end();)
+    {
+        /// a little trick
+        /// checks are of item in vector
+        /// deletes item using erase which also returns a pointer to the next item
+        /// http://bojan-komazec.blogspot.co.uk/2011/07/remove-selected-vector-elements-whilst.html
+        RotatedRect r=minAreaRect(*it);
+        float areaQ= r.size.area();
+        cout<<" "<<areaQ<<" out of "<<area<<endl;
+        if (areaQ>area)
+        {
+            it=contours.erase(it);
+        }
+        else{++it;}
     }
 }
 void addToTempMap(float cpoint,float addpoint)

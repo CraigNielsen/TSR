@@ -17,7 +17,7 @@
 #include <dlib/rand.h>
 
 using namespace cv;
-#define print(a) cout<<a<<endl;
+#define db(a) if(craigbug){cout<<a<<endl;}
 
 
 namespace Ui {
@@ -53,14 +53,18 @@ class MainWindow : public QMainWindow
     void cropTraingle(Mat &BW, Mat & roii);
     sign_handler signs;
     int frameNo=0;
-    //______________________________________________________________________
+    //________________________________CONTROL CRAIG BOOLS______________________________________
+    bool craigbug=false;
     bool writeROI=true;
     bool bitwise_shape=true;
     bool showdetections=true;
+
     string roiPath;
     cv::Size size_;
     bool preProcessROI(Mat &src);
-    void selectROI(Mat &src_, Mat &dst_, int thickness, bool rect=false);
+    void selectROI(vector<vector<Point> > & contours1, vector<Rect> &minRect);
+    void getContours(vector<vector<Point> > &contours1);
+    void classifyShape(vector<vector<Point> > & contours1, vector<Rect> minRect);
     contourHandler cHandler;
     //____________________________Global________________________________________
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
@@ -192,7 +196,7 @@ private slots:
 
     void on_maxA_valueChanged(int arg1);
 
-    void on_finalThresholdSlider_2_actionTriggered(int action);
+
 
 private:
     Ui::MainWindow *ui;

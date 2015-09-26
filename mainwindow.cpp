@@ -6,7 +6,7 @@ using namespace std;
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
-#define VIDEO_PATH "/home/craig/Videos/1.avi"
+#define VIDEO_PATH "/home/craig/Videos/2.avi"
 
 
 void MainWindow::setInitVariables()
@@ -15,6 +15,7 @@ void MainWindow::setInitVariables()
     //Gui values
 
     roiPath="/home/craig/Pictures/training_images/ROI/";
+    craigbug=false;
     writeROI=false;
     showdetections=true;
     bitwise_shape=true;
@@ -164,9 +165,18 @@ void MainWindow::on_open_clicked()  //__________________________________________
         //__________________________________________________________________________PART 2
         Mat drawing = Mat::zeros( SrcRoi.size(), CV_8UC3 );
 
-        selectROI(final,drawing,3);
-        selectROI(drawing,SrcRoi,3,true);
+        vector<vector<Point> > contours1;
 
+        getContours(contours1);//operates on image: final
+        vector<Rect> recAreas( contours1.size() );
+        db("1");
+        if (contours1.size()>0){
+            db(1.1);
+            selectROI(contours1,recAreas);
+            db(1.2);
+            classifyShape(contours1,recAreas);
+        }
+        db(2);
             /// Show in a window
 //            namedWindow( "Contours", CV_WINDOW_FREERATIO );
 //            imshow( "Contours", drawing );
