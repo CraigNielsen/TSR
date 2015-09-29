@@ -61,9 +61,53 @@ void MainWindow::getRed_inRGB(Mat &src)
 
 
 }
+void MainWindow::hsvSpace()
+{
+    //converts SrcRoi to HSV space
+    //tries to find the roi in that space instead of rgb
+
+    Mat hsv=SrcRoi.clone();
+    Mat dst=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
+    cvtColor(hsv,hsv,CV_BGR2HSV);
+    inRange(hsv, Scalar(huebottom, 0, 0), Scalar(huetop, 255, 255), dst);
+    Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
+    cv::morphologyEx(dst,dst,MORPH_OPEN,element,Point(-1,-1),2);
+
+    cv::morphologyEx(dst,dst,MORPH_CLOSE,element,Point(-1,-1),2);
+
+    namedWindow("hsv",2);
+    imshow("hsv",dst);
+
+//    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC3);
+//    //    Mat output = SrcRoi.clone();
+//    for (int i=0; i<SrcRoi.rows-2 ; i+=2)
+//    {
+//        Vec3b* opixel = blank.ptr<Vec3b>(i);
+//        Vec3b* pixel = SrcRoi.ptr<Vec3b>(i);
+
+//        for (int j=0 ; j<SrcRoi.cols-2 ; j+=2)
+//        {
+//            r= pixel[j][2];
+//            g= pixel[j][1];
+//            b= pixel[j][0];
+
+//            if ( (r > b  && (r-b)>delRB  && r > g  && (r-g)>delRG  ) )
+//            {
+//                opixel[j][2]=255;
+//                opixel[j][1]=255;
+//                opixel[j][0]=255;
+//            }
+//        }
+//    }
+
+//    //    src_gray= blank.clone();
+//    cv::inRange(blank, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src_gray);
+}
+
 void MainWindow::benallallRGB()
 {
-/*Can Optimize here if want to by not converting from 3 channels to one, just start with 1 channel image
+/*iterates through SrcRoi and finds red pixels in RGB space
+ * Can Optimize here if want to by not converting from 3 channels to one, just start with 1 channel image
  * had troubles so left it to come back to, expense is speed
 */
 

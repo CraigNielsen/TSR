@@ -58,6 +58,7 @@ class MainWindow : public QMainWindow
     bool writeROI=true;
     bool bitwise_shape=true;
     bool showdetections=true;
+    int pointDistance;
 
     string roiPath;
     cv::Size size_;
@@ -84,9 +85,11 @@ class MainWindow : public QMainWindow
 //    CvSVM svm;
     void invertGrayImage(Mat &image);
     void setupWindow2();
+    void hsvSpace();
 //    ,linkImage1;
 //    bool linkCheck=false;
-
+    //___________________  DETECTING RED  _____________________________________
+    int huetop,huebottom;
 
     //____________________________SObel_________________________________________
     QPixmap sobelPixelMap;
@@ -197,6 +200,12 @@ private slots:
     void on_maxA_valueChanged(int arg1);
 
 
+
+    void on_verticalSlider_valueChanged(int value);
+
+    void on_hueslidertop_valueChanged(int value);
+
+    void on_huesliderbottom_valueChanged(int value);
 
 private:
     Ui::MainWindow *ui;

@@ -36,12 +36,15 @@ void MainWindow::getContours(vector<vector<Point> > & contours1)
     vector<Vec4i> hierarchy1;
 
     /// Detect edges using Threshold
-    cv::Canny(final, bw1, 0, 10, 5);
+//    cv::Canny(final, bw1, 0, 10, 5);
+    cv::cvtColor(final, bw1, CV_BGR2GRAY);
+//    namedWindow("final",2);
+//    imshow("final",bw1);
+//    waitKey(0);
 
-
-
+    Mat cont=bw1.clone();
     /// Find contours
-    findContours( bw1, contours1, hierarchy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+    findContours( cont, contours1, hierarchy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
     ///________________________CENTERS OF MASS OF CONTOURS______________________________________________
     if (contours1.size()>1)
@@ -50,14 +53,39 @@ void MainWindow::getContours(vector<vector<Point> > & contours1)
         vector<Point2f> centresOfMass( contours1.size() );
         map<int,vector<Point2f>> closeContours;
         cHandler.getMassCentres(contours1,centresOfMass);
-        cHandler.removeContourForCentreWithColour(SrcRoi_clean,centresOfMass,contours1);
+
+//        cHandler.removeContourForCentreWithColour(SrcRoi_clean,centresOfMass,contours1);//only remove contours later on  when full contours are built
         cHandler.removeContourswithArea(contours1,maxA);
-        cHandler.getCloseContours(centresOfMass,contours1,closeContours);
+        cHandler.getCloseContours(centresOfMass,pointDistance,closeContours);
         if (closeContours.size()>1)
         {
-            cHandler.drawCloseContours(centresOfMass,closeContours,bw1);
+            cout<<"drawing lines"<<endl;
+            cHandler.drawCloseContours(centresOfMass,contours1,closeContours,bw1);
+            //now that contours are drawn. find new contours. and repeat
         }
     }
+    /// Find contours
+    cont=bw1.clone();
+    findContours( cont, contours1, hierarchy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+    if (contours1.size()>1)
+    {
+
+        vector<Point2f> centresOfMass( contours1.size() );
+        map<int,vector<Point2f>> closeContours;
+        cHandler.getMassCentres(contours1,centresOfMass);
+
+//        //only remove contours later on  when full contours are built
+        cHandler.removeContourswithArea(contours1,maxA);
+        cHandler.getCloseContours(centresOfMass,pointDistance,closeContours);
+        if (closeContours.size()>1)
+        {
+            cHandler.drawCloseContours(centresOfMass,contours1,closeContours,bw1);
+            //now that contours are drawn. find new contours. and repeat
+        }
+        cHandler.removeContourForCentreWithColour(SrcRoi_clean,centresOfMass,contours1);
+    }
+
+
     ///find contours again for the new combined contours in close regions
 //    namedWindow("w",2);
 //    imshow("w",bw1);
@@ -126,7 +154,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
 //            ellipse( dst_, re, color, thickness, 8 );
             //_____________________________________________________________________________________
             //draw rectangle
-//            rectangle( dst_, minRect[i].tl(), minRect[i].br(), color, 2, 8, 0 );
+            rectangle( SrcRoi, minRect[i].tl(), minRect[i].br(), color, 2, 8, 0 );
             //get ROI, test ROI, printout Class
             Rect r1=minRect[i];
             Rect ro;
@@ -138,6 +166,9 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
 
 
             /* ROI SIZE*/
+//            namedWindow("ROI",2);
+//            imshow("ROI",imageROI);
+//            waitKey(timeout);
 
             Mat ri=imageROI.clone();
             db(1.3);

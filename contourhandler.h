@@ -20,9 +20,9 @@ public:
     void getMassCentres(_Contours & contours1, _Points &mc);
     void removeContourForCentreWithColour(Mat fromImage, _Points &centres, _Contours &contours);
     void removeContourswithArea(_Contours & contours, int area);
-    void getCloseContours(_Points & centresOfMass, _Contours & contours, map<int, _Points> mep);
+    void getCloseContours(_Points & centresOfMass, int pointDistance, map<int, _Points> &mep);
     void getContourRoi(_Contours & contours);
-    void drawCloseContours(_Points & centresOfMass, map<int, vector<Point2f> > &closeContours, Mat &image);
+    void drawCloseContours(_Points & centresOfMass, _Contours contours, map<int, vector<Point2f> > &closemap, Mat &image);
 };
 
 #endif // CONTOURHANDLER_H

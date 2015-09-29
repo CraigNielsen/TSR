@@ -92,7 +92,6 @@ void contourHandler::removeContourswithArea(_Contours &contours, int area)
         /// http://bojan-komazec.blogspot.co.uk/2011/07/remove-selected-vector-elements-whilst.html
         RotatedRect r=minAreaRect(*it);
         float areaQ= r.size.area();
-        cout<<" "<<areaQ<<" out of "<<area<<endl;
         if (areaQ>area)
         {
             it=contours.erase(it);
@@ -104,7 +103,7 @@ void addToTempMap(float cpoint,float addpoint)
 {
 
 }
-void contourHandler::getCloseContours(_Points &centresOfMass, _Contours &contours, map <int,_Points> mep )
+void contourHandler::getCloseContours(_Points &centresOfMass, int pointDistance, map <int,_Points> & mep )
 {
     ///search____________________________________________________________________________
     //iterate through all centres of mass. and querie closest points to each point
@@ -113,23 +112,25 @@ void contourHandler::getCloseContours(_Points &centresOfMass, _Contours &contour
     vector<int> indices;
     vector<float> dists;
     int pointName=-1;
+    pointDistance=pointDistance*pointDistance;
+
     if (centresOfMass.size()>1)
     {
         for (_Points::iterator it = centresOfMass.begin();it!=centresOfMass.end();it++)
 
         {
-            ///iterate through all points in centres of mass
+            ///iterate through all points in centres of mass collection
             /// for each point find all the nearest neighbours
             ///  add all nearest neighbours with distanve requirements to a map with the point name as a key (pointname is point name)
             ///the indices is the indicy to reference the centreofMass ALWAYS
+            Point c=*it;
             pointName+=1;
-            int range=500;
             int numOfPoints=centresOfMass.size();
             flann::KDTreeIndexParams indexParams;
             flann::Index kdtree(Mat(centresOfMass).reshape(1), indexParams);
             vector<float> query;
-            query.push_back((*it).x); //Insert the 2D point we need to find neighbours to the query
-            query.push_back((*it).y); //Insert the 2D point we need to find neighbours to the query
+            query.push_back(c.x); //Insert the 2D point we need to find neighbours to the query
+            query.push_back(c.y); //Insert the 2D point we need to find neighbours to the query
             kdtree.knnSearch(query,indices,dists,numOfPoints);
             //all nearest are in centresofMass with indices.
 
@@ -137,7 +138,7 @@ void contourHandler::getCloseContours(_Points &centresOfMass, _Contours &contour
             for (vector<int>::iterator it2 = indices.begin();it2!=indices.end();it2++)
             {
                 int what=*it2;
-                if (dists[what]>0)
+                if (dists[what]<pointDistance && dists[what]>1)
                 {
                     mep[pointName].push_back(centresOfMass[indices[what]]);
                 }
@@ -145,25 +146,43 @@ void contourHandler::getCloseContours(_Points &centresOfMass, _Contours &contour
         }
     }
 }
-void contourHandler::drawCloseContours(_Points &centresOfMass, map<int,vector<Point2f>> &closeContours, Mat & image)
+void contourHandler::drawCloseContours(_Points &centresOfMass, _Contours contours,map<int,vector<Point2f>> & closemap, Mat & image)
 {
     ///for all points associated with the centreofMass index (which is the name of closeContour in map) draw lines between them
     /// for each centre of mass, draw lines between the points of the closest contours on the given image
     Scalar colour=Scalar( 255, 255, 255 );
-    int thickness=3;
+    int thickness=5;
 
-    for (int i = 0 ; i<centresOfMass.size();i++)
+    for (unsigned int i = 0 ; i<centresOfMass.size();i++)
     {
         //get the vector associated with the current centre of mass
-        _Points points=closeContours[i];
-        //draw lines between the points in the vector
-        //draw from first to last point once
-        line(image,points.begin()[0],points.begin()[points.size()],colour,thickness);
-        //then all points in succession
-        for (_Points::iterator point=points.begin();point!=points.end();point)
+        _Points points=closemap[i];
+        if (points.size()>2)
         {
-            line(image,*point,*(point++),colour,thickness);
+            //for a point, if the close points are more than one:
+
+            Point2f start=centresOfMass[i];
+            Point2f stop=closemap[i].back();
+            //draw lines between the points in the vector
+            //draw from first to last point once
+            line(image,start,stop,colour,thickness);
+            //then all points in succession
+            for (_Points::iterator point=points.begin();point!=points.end();point)
+            {
+                Point2f start=*point;
+                Point2f stop=*(point++);
+                line(image,start,stop,colour,thickness);
+            }
         }
+        else if (points.size()==2)
+        {
+            Point2f start=centresOfMass[i];
+            Point2f stop=closemap[i].back();
+            //draw lines between the points in the vector
+            //draw from first to last point once
+            line(image,start,stop,colour,thickness);
+        }
+
     }
 }
 

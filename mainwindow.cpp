@@ -6,7 +6,7 @@ using namespace std;
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
-#define VIDEO_PATH "/home/craig/Videos/2.avi"
+#define VIDEO_PATH "/home/craig/Videos/1.avi"
 
 
 void MainWindow::setInitVariables()
@@ -19,8 +19,9 @@ void MainWindow::setInitVariables()
     writeROI=false;
     showdetections=true;
     bitwise_shape=true;
-    size_= cv::Size(10,10);
+    size_= cv::Size(11,11);
     name=1;
+    pointDistance = 100;
 
     triangleSign=imread("/home/craig/Pictures/test_images/tri.png",CV_LOAD_IMAGE_COLOR);
     circleSign=imread("/home/craig/Pictures/test_images/circ.jpg",CV_LOAD_IMAGE_COLOR);
@@ -33,6 +34,8 @@ void MainWindow::setInitVariables()
     Size s=Size(50,50);
     cv::resize(triangleSign,triangleSign,s,0,0,INTER_NEAREST);
     cv::resize(circleSign,circleSign,s,0,0,INTER_NEAREST);
+    huetop=180;
+    huebottom=170;
 
     //_____________LOAD  DLIB CLASSIFIER _________________
 
@@ -145,6 +148,8 @@ void MainWindow::on_open_clicked()  //__________________________________________
         Setup(frame);
         //Threshold NEEDS WORK
         benallallRGB();
+        //try converted to HSV space
+//        hsvSpace();
 
         //BLUR
         if (ui->cb_Gauss->isChecked()){
@@ -236,6 +241,8 @@ void MainWindow::setupWindow2()
 
 
 }
+
+
 
 
 
@@ -392,3 +399,18 @@ void MainWindow::on_maxA_valueChanged(int arg1)
 }
 
 
+
+void MainWindow::on_verticalSlider_valueChanged(int value)
+{
+    pointDistance=value;
+}
+
+void MainWindow::on_hueslidertop_valueChanged(int value)
+{
+    huetop=value;
+}
+
+void MainWindow::on_huesliderbottom_valueChanged(int value)
+{
+    huebottom=value;
+}
