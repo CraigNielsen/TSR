@@ -62,13 +62,15 @@ void MainWindow::cropTraingle(Mat & BW,Mat &roii)
     warpAffine(roii, warp_dst, warp_mat, warp_dst.size() );
 
     /// Show what you got
-    namedWindow( "source_window",2);
-    imshow( "source_window", BW );
-    waitKey(0) ;
+//    namedWindow( "source_window",2);
+//    imshow( "source_window", BW );
+//    waitKey(0) ;
     cout << topc<< " "<< topr <<" "<< botlc<<" "<<botlr<<" "<< botrc<< " "<< botrr<<endl;
 
 }
-bool MainWindow::getShape(Mat &src_,Mat & roii)
+bool MainWindow::getShape(Mat &src_,string & type)
+//will return true if triangle or circle.
+//false if its just noise
 {
     //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
     //return true for triangle, false if its a circle
@@ -84,9 +86,25 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
 
     Mat combine=src_.clone();
     Mat combine2=src_.clone();
+    Mat combinel=src_.clone();
+    Mat combiner=src_.clone();
+
     bitwise_and(triangle,src_,combine);
     bitwise_and(circle,src_,combine2);
+    bitwise_and(leftBinary,src_,combinel);
+    bitwise_and(rightBinary,src_,combiner);
 
+
+    //get count for all non zero pixels
+
+    int r=countNonZero(combine);
+    int c=countNonZero(combine2);
+    int left=countNonZero(combinel);
+    int right=countNonZero(combiner);
+    int total=countNonZero(src_);
+
+
+    if ((r+c)< 10 || left ==0 || right==0 || total > 50 ){return false;}
 //    imshow("tri",triangle);
 //    waitKey(0);
 //    imshow("tri",circle);
@@ -97,17 +115,16 @@ bool MainWindow::getShape(Mat &src_,Mat & roii)
 //    waitKey(0);
 //    imshow("tri",combine2);
 //    waitKey(0);
-
-    int r=countNonZero(combine);
-    int c=countNonZero(combine2);
     if (r>c)
     {
 //    cropTraingle(src_,roii);
+        type="tri";
         return true;
     }
-
-    return false;
-
+    else {
+    type="circle";
+    return true;
+    }
 
     dlib::matrix<double,tImageCols,1>  m;
     get1DFeatureRow(src_,m);

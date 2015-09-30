@@ -137,7 +137,7 @@ void MainWindow::drawRectangles(vector<RotatedRect> rects, Mat &image)
     QPixmap map2;
     QImage ProPic2((uchar*)(image).data,(image).cols,(image).rows,(image).step,QImage::Format_RGB888);
     map2.convertFromImage(ProPic2);
-    ui->rectangleDisplayImg->setPixmap(map2);
+
 
 
 }

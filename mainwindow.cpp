@@ -22,7 +22,8 @@ void MainWindow::setInitVariables()
     size_= cv::Size(11,11);
     name=1;
     pointDistance = 100;
-
+    leftBinary=imread("/home/craig/Pictures/training_images/shape/left.png",CV_LOAD_IMAGE_GRAYSCALE);
+    rightBinary=imread("/home/craig/Pictures/training_images/shape/right.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangleSign=imread("/home/craig/Pictures/test_images/tri.png",CV_LOAD_IMAGE_COLOR);
     circleSign=imread("/home/craig/Pictures/test_images/circ.jpg",CV_LOAD_IMAGE_COLOR);
 
@@ -179,7 +180,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
             db(1.1);
             selectROI(contours1,recAreas);
             db(1.2);
-            classifyShape(contours1,recAreas);
+            classifyShape(contours1,recAreas,SrcRoi);
         }
         db(2);
             /// Show in a window
@@ -202,7 +203,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
 
         namedWindow( "Contours2", 2 );
         imshow( "Contours2", SrcRoi );
-
+        imUpdate(ui->finalvideo,&SrcRoi,"colour");
 
 
 //        namedWindow("processed",CV_WINDOW_FREERATIO);

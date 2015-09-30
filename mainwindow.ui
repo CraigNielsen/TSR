@@ -86,7 +86,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLabel" name="rectangleDisplayImg">
+       <widget class="QLabel" name="finalvideo">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
           <horstretch>0</horstretch>

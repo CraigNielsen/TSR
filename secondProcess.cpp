@@ -59,7 +59,6 @@ void MainWindow::getContours(vector<vector<Point> > & contours1)
         cHandler.getCloseContours(centresOfMass,pointDistance,closeContours);
         if (closeContours.size()>1)
         {
-            cout<<"drawing lines"<<endl;
             cHandler.drawCloseContours(centresOfMass,contours1,closeContours,bw1);
             //now that contours are drawn. find new contours. and repeat
         }
@@ -130,7 +129,7 @@ void MainWindow::selectROI(vector<vector<Point> > & contours1,vector<Rect> & min
         if ( a > minA && a < maxA )
         {
             // contour
-            drawContours( outImage, contours1, i, color, 5, 8, vector<Vec4i>(), 0, Point() );
+//            drawContours( outImage, contours1, i, color, 5, 8, vector<Vec4i>(), 0, Point() );
             // ellipse
             ellipse( cnt_img, minEllipse[i], color,4, 8 );
         }
@@ -139,7 +138,7 @@ void MainWindow::selectROI(vector<vector<Point> > & contours1,vector<Rect> & min
 
 
 
-void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> minRect)
+void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> minRect,Mat & frame)
     {
     for( unsigned int i = 0; i< contours1.size(); i++ )
     {
@@ -162,13 +161,9 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
             catch (exception){cout<<"caught rectangle creation exception"<<endl;}
 
             Mat imageROI= (SrcRoi_clean(minRect[i])).clone();
-            Mat q= SrcRoi_clean.clone();
+//            Mat q= SrcRoi_clean.clone();
+            Mat q= SrcRoi;
 
-
-            /* ROI SIZE*/
-//            namedWindow("ROI",2);
-//            imshow("ROI",imageROI);
-//            waitKey(timeout);
 
             Mat ri=imageROI.clone();
             db(1.3);
@@ -184,29 +179,34 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 imwrite(roiPath+std::to_string(name)+".png",imageROI);
                 name+=1;
             }
-            bool tri;
+            bool isSign;
             //check centre is not red, then find shape classify for the rectangle(roi and position)
             bool checkC=preProcessROI(imageROI);
+
+            string type;
             if (checkC && bitwise_shape) //checks if center is red or not
             {
-                try{tri=getShape(imageROI,ri);}//true if triangle, false if circle
+
+                try{isSign=getShape(imageROI,type);}//true if triangle, false if circle
                 catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
             }
             // get centre position of rect in source image
-            if (checkedCenter && showdetections)
+            if (checkC && showdetections && isSign)
             {
+
                 Mat ir1= (SrcRoi_clean(minRect[i]));
                 Size s;
                 Point centre;
                 ir1.locateROI(s,centre);
-                string label;
-                (tri) ? (label="tri") : (label="circle") ;
 
-                signs.add(centre,label,frameNo);
+
+                signs.add(centre,type,frameNo);
                 //check is any labels are set yet
                 map<int,string> mp=signs.checklabels();
                 map<int,string>::iterator i;
                 db(1.5);
+                //go through the map of detected signs and add an image to the frame passed into the function
+                // can also add the image to a holder at the bottom of the window.
                 if (mp.size()>1){
                     for ( i=mp.begin();i!=mp.end();i++)
                     {
@@ -214,23 +214,29 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                         int key = i-> first;
                         string val=i->second;
                         Point pos=signs.locations[key];
-                        cout<<pos.x<<pos.y<<q.cols<<q.rows;
-                        if ((pos.x+triangleSign.cols )> q.cols)
+                        int iHeight= triangleSign.rows;
+                        cout<<"is :" <<pos.x + triangleSign.cols <<"> "<< frame.cols<<"? or is  "<<pos.y<<" > "<<frame.cols+triangleSign.cols<<endl;
+                        if ((pos.x+triangleSign.cols )> frame.cols)
                         {
-                            (val=="triangle") ? (triangleSign.copyTo(q(Rect(pos.x-triangleSign.rows-1,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(q(Rect(pos.x-circleSign.rows-1,pos.y,circleSign.rows,circleSign.cols)))) ;
+                            (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-triangleSign.cols-1,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-circleSign.rows-1,pos.y,circleSign.rows,circleSign.cols)))) ;
                         }
-                        else  (val=="triangle") ? (triangleSign.copyTo(q(Rect(pos.x,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(q(Rect(pos.x,pos.y,circleSign.rows,circleSign.cols)))) ;
-
+                        else if ((pos.y+triangleSign.rows )> frame.rows)
+                        {
+                            (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-1,pos.y-triangleSign.rows,circleSign.rows,circleSign.cols)))) ;
+                        }
+                        else (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight,circleSign.rows,circleSign.cols)))) ;
+                        (val=="triangle") ? (triangleSign.copyTo(frame(Rect(0,0,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(0,0,circleSign.rows,circleSign.cols)))) ;
                     }
 
-                    int fontface = cv::FONT_HERSHEY_SIMPLEX;
-                    double scale = 2;
-                    int thickness = 3;
-                    cv::putText(q,to_string(frameNo),Point (100,100), fontface, scale, CV_RGB(0,0,255), thickness, 8);
-                    namedWindow("roi",2);
-                    imshow("roi",q);
-                    waitKey(timeout);
+//                    int fontface = cv::FONT_HERSHEY_SIMPLEX;
+//                    double scale = 2;
+//                    int thickness = 3;
+//                    cv::putText(frame,to_string(frameNo),Point (100,100), fontface, scale, CV_RGB(0,0,255), thickness, 8);
+//                    namedWindow("contours2",2);
+//                    imshow("contours2",frame);
+
                 }
+                db(1.6);
             }
         }
     }

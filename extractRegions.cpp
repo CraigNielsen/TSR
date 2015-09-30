@@ -90,6 +90,21 @@ bool testCentre(Mat & temp)
     else {return true;}
 
 }
+bool MainWindow::testcorners(Mat & temp)
+{
+///checks the top corners for white pixels. return false if found
+///
+    int co=triangleSign.cols;
+    int c1=(int)temp.at<uchar>(0,temp.cols);
+    int c2=(int)temp.at<uchar>(1,temp.cols);
+    int c3=(int)temp.at<uchar>(0,temp.cols-1);
+    int c4=(int)temp.at<uchar>(0,0);
+    int c5=(int)temp.at<uchar>(0,1);
+    int c6=(int)temp.at<uchar>(1,0);
+    if (c1 == 255 || c2 == 255 || c3 == 255 || c4 == 255 || c5 == 255 || c6 == 255  ){return false;}
+    else {return true;}
+
+}
 bool MainWindow::preProcessROI(Mat &src_)
 {
     // Floodfill corners
@@ -98,7 +113,7 @@ bool MainWindow::preProcessROI(Mat &src_)
 
     //    src_gray= blank.clone();
     cv::inRange(src_, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src_);
-    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
+//    Mat blank=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
 //    cout<< src_.channels()<<endl;
     //    cv::cvtColor(src_,blank,CV_BGR2GRAY);
 
@@ -114,17 +129,22 @@ bool MainWindow::preProcessROI(Mat &src_)
     src_=src_>80;
 
     bool yes=testCentre(src_);
-    if (yes)
+    bool notNoise=testcorners(src_);
+    if (yes && notNoise)
     {
+//        namedWindow("floodfill",2);
+//        imshow("floodfill",src_);
+//        waitKey(timeout);
         if (writeROI)
         {
             namedWindow("floodfill",2);
             imshow("floodfill",src_);
+            waitKey(timeout);
             imwrite("/home/craig/Pictures/training_images/BW_ROIsmall/"+std::to_string(name)+".png",src_);
             name+=1;
         }
     }
-    return yes;
+    return (yes && notNoise);
 //    waitKey(100);
     //threshold red out
     // treshold black near the centre

@@ -46,7 +46,7 @@ class MainWindow : public QMainWindow
     > df3;
     void convertToDlib(Mat & src_);
     Mat featureRowTemp_;
-    bool getShape(Mat & src_, Mat &roii);
+    bool getShape(Mat & src_, string &type);
     void get1DFeatureRow(Mat & img_mat, dlib::matrix<double, tImageCols, 1> & m);
     std::vector<sample_type> samples;
     void printOutMatrix(Mat & in_);
@@ -65,13 +65,15 @@ class MainWindow : public QMainWindow
     bool preProcessROI(Mat &src);
     void selectROI(vector<vector<Point> > & contours1, vector<Rect> &minRect);
     void getContours(vector<vector<Point> > &contours1);
-    void classifyShape(vector<vector<Point> > & contours1, vector<Rect> minRect);
+    void classifyShape(vector<vector<Point> > & contours1, vector<Rect> minRect, Mat &frame);
     contourHandler cHandler;
+    bool testcorners(Mat & temp);
     //____________________________Global________________________________________
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
     int name=0;
     Mat triangleSign,circleSign;
+    Mat rightBinary, leftBinary;
     trainerObject trainer=trainerObject();
     cv::Rect roi;
     float lowHeightSquared=1/10.;
