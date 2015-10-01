@@ -6,6 +6,9 @@ using namespace std;
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
+//#define VIDEO_PATH "/home/craig/Videos/50_1080p_Test.dvd"
+//#define VIDEO_PATH "/home/craig/Videos/long.mp4"
+//#define VIDEO_PATH "/home/craig/Videos/debug1.dvd"
 #define VIDEO_PATH "/home/craig/Videos/1.avi"
 
 
@@ -17,6 +20,7 @@ void MainWindow::setInitVariables()
     roiPath="/home/craig/Pictures/training_images/ROI/";
     craigbug=false;
     writeROI=false;
+    writeROIbw=false;
     showdetections=true;
     bitwise_shape=true;
     size_= cv::Size(11,11);
@@ -24,8 +28,10 @@ void MainWindow::setInitVariables()
     pointDistance = 100;
     leftBinary=imread("/home/craig/Pictures/training_images/shape/left.png",CV_LOAD_IMAGE_GRAYSCALE);
     rightBinary=imread("/home/craig/Pictures/training_images/shape/right.png",CV_LOAD_IMAGE_GRAYSCALE);
+    utri=imread("/home/craig/Pictures/training_images/shape/utri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangleSign=imread("/home/craig/Pictures/test_images/tri.png",CV_LOAD_IMAGE_COLOR);
     circleSign=imread("/home/craig/Pictures/test_images/circ.jpg",CV_LOAD_IMAGE_COLOR);
+    utriSign=imread("/home/craig/Pictures/test_images/utri.png",CV_LOAD_IMAGE_COLOR);
 
     if(!triangleSign.data){(cout<<"no trianglesign"<<endl);}
     if(!circleSign.data){(cout<<"no circlesign");}
@@ -38,7 +44,7 @@ void MainWindow::setInitVariables()
     huetop=180;
     huebottom=170;
 
-    //_____________LOAD  DLIB CLASSIFIER _________________
+    //_____________LOAD  DLIB CLASSFIER _________________
 
 //    svm.load("/home/craig/scripts/road1.xml"); // loading
 //    // load the function back in from disk and store it in df3.
@@ -52,15 +58,21 @@ void MainWindow::setInitVariables()
 
 //    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
     //__________________ROI HEIGHT FOR SOURCE IMAGE__________________________________
+//    int topx=srcCols/10;
+//    int topy=srcRows/4;
+//    int width=srcCols-2*topx;
+//    int height=srcRows/3;
+    //__________________________________________________
+    //TEST VIDEOS:
     int topx=srcCols/10;
-    int topy=srcRows/4;
+    int topy=0;
     int width=srcCols-2*topx;
-    int height=srcRows/3;
-
+    int height=srcRows;
+    //__________________________________________________
     roi = cv::Rect(topx,topy,width,height);
     a=0;b=0;c=62;d=255;e=46;f=255;
     minA=200;
-    maxA=20000;
+    maxA=15000;
     ui->kernalWidthSpin->setValue(3);
     ui->kernalTypeSpin->setValue(0);
     ui->morphOperatorSlider->setValue(1);
@@ -205,12 +217,12 @@ void MainWindow::on_open_clicked()  //__________________________________________
         imshow( "Contours2", SrcRoi );
         imUpdate(ui->finalvideo,&SrcRoi,"colour");
 
-
+        cout<<"Frame NUmber is: "<<frameNo<<endl;
 //        namedWindow("processed",CV_WINDOW_FREERATIO);
 //        cv::imshow("processed",framout);
 
         cv::waitKey(timeout);                                                                               // or press key to stop
-        if (cv::waitKey(10)>=0)
+        if (cv::waitKey(1)>=0)
             stop= true;
     }
 
@@ -414,4 +426,10 @@ void MainWindow::on_hueslidertop_valueChanged(int value)
 void MainWindow::on_huesliderbottom_valueChanged(int value)
 {
     huebottom=value;
+}
+
+void MainWindow::on_exportROIbw_clicked()
+{
+
+    writeROIbw=!writeROIbw;
 }

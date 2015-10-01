@@ -135,7 +135,7 @@ bool MainWindow::preProcessROI(Mat &src_)
 //        namedWindow("floodfill",2);
 //        imshow("floodfill",src_);
 //        waitKey(timeout);
-        if (writeROI)
+        if (writeROIbw)
         {
             namedWindow("floodfill",2);
             imshow("floodfill",src_);

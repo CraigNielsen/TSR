@@ -118,6 +118,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="exportROIbw">
+          <property name="text">
+           <string>exportROIbw</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="contourRetrievalModeLabel">
           <property name="text">
            <string/>
@@ -563,6 +570,9 @@
         </item>
         <item row="0" column="1">
          <widget class="QSlider" name="verticalSlider">
+          <property name="maximum">
+           <number>200</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>

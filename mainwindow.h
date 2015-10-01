@@ -56,6 +56,7 @@ class MainWindow : public QMainWindow
     //________________________________CONTROL CRAIG BOOLS______________________________________
     bool craigbug=false;
     bool writeROI=true;
+    bool writeROIbw=true;
     bool bitwise_shape=true;
     bool showdetections=true;
     int pointDistance;
@@ -72,8 +73,8 @@ class MainWindow : public QMainWindow
     Mat src,src_cROI, srcCopy1,srcCopy2, img_extractFromHere,img_seedPoints,img_roiMask,img_previewImport,final,src_clean,SrcRoi,SrcRoi_clean;
     int srcRows,srcCols,minA,maxA;
     int name=0;
-    Mat triangleSign,circleSign;
-    Mat rightBinary, leftBinary;
+    Mat triangleSign,circleSign, utriSign;
+    Mat rightBinary, leftBinary,utri;
     trainerObject trainer=trainerObject();
     cv::Rect roi;
     float lowHeightSquared=1/10.;
@@ -144,7 +145,7 @@ public:
     QImage ProPic;
     void detectROIShapes_one();
     void detectShapes();
-    int timeout=100;
+    int timeout=1;
     void getRed_inRGB(Mat &src);
     void benallallRGB();
 private slots:
@@ -208,6 +209,8 @@ private slots:
     void on_hueslidertop_valueChanged(int value);
 
     void on_huesliderbottom_valueChanged(int value);
+
+    void on_exportROIbw_clicked();
 
 private:
     Ui::MainWindow *ui;

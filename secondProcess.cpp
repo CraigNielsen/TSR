@@ -145,6 +145,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
 
         Scalar color = Scalar( 255, 255, 255 );
         int a=(minAreaRect( Mat(contours1[i]) ).size.area());
+
         if ( a > minA && a < maxA )
         {
 
@@ -182,7 +183,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
             bool isSign;
             //check centre is not red, then find shape classify for the rectangle(roi and position)
             bool checkC=preProcessROI(imageROI);
-
+            db(1.41);
             string type;
             if (checkC && bitwise_shape) //checks if center is red or not
             {
@@ -190,6 +191,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 try{isSign=getShape(imageROI,type);}//true if triangle, false if circle
                 catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
             }
+            db(1.42);
             // get centre position of rect in source image
             if (checkC && showdetections && isSign)
             {
@@ -198,7 +200,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 Size s;
                 Point centre;
                 ir1.locateROI(s,centre);
-
+                db(1.43);
 
                 signs.add(centre,type,frameNo);
                 //check is any labels are set yet
@@ -207,7 +209,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 db(1.5);
                 //go through the map of detected signs and add an image to the frame passed into the function
                 // can also add the image to a holder at the bottom of the window.
-                if (mp.size()>1){
+                if (mp.size()>0){
                     for ( i=mp.begin();i!=mp.end();i++)
                     {
                         //set image at position using key
@@ -215,8 +217,14 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                         string val=i->second;
                         Point pos=signs.locations[key];
                         int iHeight= triangleSign.rows;
-                        cout<<"is :" <<pos.x + triangleSign.cols <<"> "<< frame.cols<<"? or is  "<<pos.y<<" > "<<frame.cols+triangleSign.cols<<endl;
-                        if ((pos.x+triangleSign.cols )> frame.cols)
+//                        cout<<"is :" <<pos.x + triangleSign.cols <<"> "<< frame.cols<<"? or is  "<<pos.y<<" > "<<frame.cols+triangleSign.cols<<endl;
+//                        if (val=="utri")
+//                        {
+//                            (utriSign.copyTo(frame(Rect(pos.x+iHeight,pos.y,triangleSign.rows,triangleSign.cols))));
+//                            continue;
+//                        }
+                        cout<< val<< "at x:" << pos.x <<" y: "<< pos.y << endl;
+                         if ((pos.x+triangleSign.cols )> frame.cols)
                         {
                             (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-triangleSign.cols-1,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-circleSign.rows-1,pos.y,circleSign.rows,circleSign.cols)))) ;
                         }
@@ -224,8 +232,10 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                         {
                             (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-1,pos.y-triangleSign.rows,circleSign.rows,circleSign.cols)))) ;
                         }
-                        else (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight,circleSign.rows,circleSign.cols)))) ;
-                        (val=="triangle") ? (triangleSign.copyTo(frame(Rect(0,0,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(0,0,circleSign.rows,circleSign.cols)))) ;
+                        else if (pos.x-iHeight > 0 )(val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-iHeight,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-iHeight,pos.y,circleSign.rows,circleSign.cols)))) ;
+
+                        else (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x+iHeight,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x+iHeight,pos.y,circleSign.rows,circleSign.cols)))) ;
+//                        (val=="triangle") ? (triangleSign.copyTo(frame(Rect(0,0,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(0,0,circleSign.rows,circleSign.cols)))) ;
                     }
 
 //                    int fontface = cv::FONT_HERSHEY_SIMPLEX;

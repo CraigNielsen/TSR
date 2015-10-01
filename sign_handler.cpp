@@ -71,15 +71,20 @@ map<int,string> sign_handler::checklabels()
         {
             int tricount=0;
             int circount=0;
+            int utryCount=0;
             vector<string>::iterator j;
             //count them all
             for (j = vs.begin();j!=vs.end();j++)
             {
-                (*j=="tri") ? (tricount+=1) : (circount+=1) ;
+                (*j=="tri") ? (tricount+=1) : 0 ;
+                (*j=="circle") ? (circount+=1) : 0 ;
+                (*j=="utri") ? (utryCount+=1) : 0 ;
             }
             //add key and label to map
             string label;
-            (tricount>circount) ? (label="triangle") : (label="circle");
+            if (tricount>circount && tricount > utryCount)  (label="triangle") ;
+            else if (circount>tricount && circount > utryCount) (label="circle") ;
+            else if (utryCount>circount && utryCount > tricount) (label="utry") ;
             signs[key]=label;
         }
     }

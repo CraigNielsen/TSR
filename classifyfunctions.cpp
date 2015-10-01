@@ -88,11 +88,13 @@ bool MainWindow::getShape(Mat &src_,string & type)
     Mat combine2=src_.clone();
     Mat combinel=src_.clone();
     Mat combiner=src_.clone();
+    Mat cUtry=src_.clone();
 
     bitwise_and(triangle,src_,combine);
     bitwise_and(circle,src_,combine2);
     bitwise_and(leftBinary,src_,combinel);
     bitwise_and(rightBinary,src_,combiner);
+    bitwise_and(utri,src_,cUtry);
 
 
     //get count for all non zero pixels
@@ -102,9 +104,10 @@ bool MainWindow::getShape(Mat &src_,string & type)
     int left=countNonZero(combinel);
     int right=countNonZero(combiner);
     int total=countNonZero(src_);
+    int ut=countNonZero(cUtry);
 
 
-    if ((r+c)< 10 || left ==0 || right==0 || total > 50 ){return false;}
+    if ((r+c)< 10 || left ==0 || right==0 /*|| total > 50*/ ){return false;}
 //    imshow("tri",triangle);
 //    waitKey(0);
 //    imshow("tri",circle);
@@ -113,17 +116,25 @@ bool MainWindow::getShape(Mat &src_,string & type)
 //    waitKey(0);
 //    imshow("tri",combine);
 //    waitKey(0);
-//    imshow("tri",combine2);
+//    imshow("circle",combine2);
+//    imshow("utrycombined",cUtry);
 //    waitKey(0);
     if (r>c)
     {
 //    cropTraingle(src_,roii);
         type="tri";
+//        cout<<"tri"<<endl;
         return true;
     }
-    else {
+    else if (c>ut){
     type="circle";
+//    cout<<"circ"<<endl;
     return true;
+    }
+    else {
+        type="utri";
+        cout<<"utri";
+        return true;
     }
 
     dlib::matrix<double,tImageCols,1>  m;
