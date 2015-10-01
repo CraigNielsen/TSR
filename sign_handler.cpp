@@ -1,5 +1,7 @@
 #include "sign_handler.h"
 
+#define certainty 7
+
 sign_handler::sign_handler()
 {
     cout<<"created a sign handler"<<endl;
@@ -45,7 +47,8 @@ void sign_handler::checkframe(int frameNo)
 {
     for (frameit i = frame.begin();i!=frame.end();i++)
     {
-        if ((frameNo - i->second) > 5)
+
+        if ((frameNo - i->second) > certainty)
         {
             int deletekey=i->first;
             locations.erase(deletekey);

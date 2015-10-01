@@ -184,14 +184,16 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
             //check centre is not red, then find shape classify for the rectangle(roi and position)
             bool checkC=preProcessROI(imageROI);
             db(1.41);
-            string type;
+            string type,sign;
             if (checkC && bitwise_shape) //checks if center is red or not
             {
 
-                try{isSign=getShape(imageROI,type);}//true if triangle, false if circle
+                try{isSign=binaryShape(imageROI,type);
+                sign=getShape(imageROI);}//true if triangle, false if circle
                 catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
             }
             db(1.42);
+            if (sign=="notSign"){cout<<"caught non sign"<<endl;continue;}
             // get centre position of rect in source image
             if (checkC && showdetections && isSign)
             {
@@ -202,7 +204,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 ir1.locateROI(s,centre);
                 db(1.43);
 
-                signs.add(centre,type,frameNo);
+                signs.add(centre,sign,frameNo);
                 //check is any labels are set yet
                 map<int,string> mp=signs.checklabels();
                 map<int,string>::iterator i;

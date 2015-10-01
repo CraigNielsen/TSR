@@ -48,13 +48,14 @@ void MainWindow::setInitVariables()
 
 //    svm.load("/home/craig/scripts/road1.xml"); // loading
 //    // load the function back in from disk and store it in df3.
-//    try {
-//    dlib::deserialize("df2.dat") >> df3;
-//    }
-//    catch (exception)
-//    {
-//        cout<<"is the .dat file for classifier dlib in the built directory?";
-//    }
+    try {
+    dlib::deserialize("df.dat") >> df3;
+    cout<<"DLIB .dat loaded";
+    }
+    catch (exception)
+    {
+        cout<<"is the .dat file for classifier dlib in the built directory?";
+    }
 
 //    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
     //__________________ROI HEIGHT FOR SOURCE IMAGE__________________________________
@@ -162,7 +163,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
         //Threshold NEEDS WORK
         benallallRGB();
         //try converted to HSV space
-//        hsvSpace();
+        hsvSpace();
 
         //BLUR
         if (ui->cb_Gauss->isChecked()){
@@ -432,4 +433,16 @@ void MainWindow::on_exportROIbw_clicked()
 {
 
     writeROIbw=!writeROIbw;
+}
+
+void MainWindow::on_verticalSlider_2_valueChanged(int value)
+{
+    sat=value;
+    ui->S->setText(QString(value));
+}
+
+void MainWindow::on_verticalSlider_3_valueChanged(int _value)
+{
+    value=_value;
+    ui->V->setText(QString(_value));
 }

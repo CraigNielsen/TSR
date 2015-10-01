@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow
     ///__________________________________________
 
     //+++++++++++++___ DLIB  CLASSIFIER ___+++++++++++++++++++++++++++++++++
-    static const int tImageCols=100;
+    static const int tImageCols=4;
 
     typedef dlib::matrix<double,tImageCols,1> sample_type;
     typedef dlib::one_vs_one_trainer<dlib::any_trainer<sample_type> > ovo_trainer;
@@ -46,7 +46,7 @@ class MainWindow : public QMainWindow
     > df3;
     void convertToDlib(Mat & src_);
     Mat featureRowTemp_;
-    bool getShape(Mat & src_, string &type);
+    string getShape(Mat & src_);
     void get1DFeatureRow(Mat & img_mat, dlib::matrix<double, tImageCols, 1> & m);
     std::vector<sample_type> samples;
     void printOutMatrix(Mat & in_);
@@ -92,9 +92,10 @@ class MainWindow : public QMainWindow
 //    ,linkImage1;
 //    bool linkCheck=false;
     //___________________  DETECTING RED  _____________________________________
-    int huetop,huebottom;
+    int huetop,huebottom,sat,value;
 
     //____________________________SObel_________________________________________
+    bool binaryShape(Mat & src_, string &type);
     QPixmap sobelPixelMap;
     int GaussBlurAmt = 3;
     int SobelKernalSize =3;
@@ -211,6 +212,10 @@ private slots:
     void on_huesliderbottom_valueChanged(int value);
 
     void on_exportROIbw_clicked();
+
+    void on_verticalSlider_2_valueChanged(int value);
+
+    void on_verticalSlider_3_valueChanged(int _value);
 
 private:
     Ui::MainWindow *ui;

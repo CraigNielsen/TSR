@@ -69,7 +69,9 @@ void MainWindow::hsvSpace()
     Mat hsv=SrcRoi.clone();
     Mat dst=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
     cvtColor(hsv,hsv,CV_BGR2HSV);
-    inRange(hsv, Scalar(huebottom, 0, 0), Scalar(huetop, 255, 255), dst);
+//    huebottom=160;
+//    huetop=180;
+    inRange(hsv, Scalar(huebottom, sat, value), Scalar(huetop, 255, 255), dst);
     Mat element = getStructuringElement( kernalType, Size( morph_width, morph_height )/*, Point( morph_size, morph_size )*/ );
     cv::morphologyEx(dst,dst,MORPH_OPEN,element,Point(-1,-1),2);
 
