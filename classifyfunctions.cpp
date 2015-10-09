@@ -200,31 +200,36 @@ string MainWindow::getShape(Mat &src_)
 //  create a feature vector
 
     if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;}
+    imshow("window:",src_);
+//    waitKey(1000);
     double ly=trainer.yLocationLeft(src_);
     double ry=trainer.yLocationRight(src_);
     double leftRow=trainer.leftRowWhiteCount(src_);
     double totalPercent=countNonZero(src_)*100/(src_.rows*src_.cols);
+//    double first2=trainer.countFirst2(src_);
+//    double last2=trainer.countLast2(src_);
 
     //the cascade is read in with the init function named df3 (df3 defined in header..note : its complicated)
     //return true for triangle, false if its a circle
     // get the feature row of test vector
 
     if (totalPercent>50 || totalPercent<6){return "notSign";}
-    dlib::matrix<double,4,1>  m;
+    dlib::matrix<double,tImageCols,1>  m;
 //    get1DFeatureRow(src_,m);old one
-    imshow("window:",src_);
-    waitKey(0);
+
     m(0)=ly;
     m(1)=ry;
     m(2)=leftRow;
     m(3)=totalPercent;
+//    m(4)=first2;
+//    m(5)=last2;
     // get the label of the test vector
     string label;
 
-    cout << "dlib predicted label: "<< df3(m)<< endl;
-    if (df3(m)==0){label="tri";}
-    else if (df3(m)==1){label="circle";}
-    else if (df3(m)==2){label="utri";}
+    cout << "dlib predicted label: "<< df3(m)<< "for"<< ly << " " <<ry << " " <<leftRow << " " <<totalPercent << " " << endl;
+    if (df3(m)==1){label="utri";}
+    else if (df3(m)==0){label="circle";}
+    else if (df3(m)==2){label="tri";}
     return label;
 
 
