@@ -11,6 +11,7 @@
 #include "trainerobject.h"
 #include "sign_handler.h"
 #include "contourhandler.h"
+#include "cascadeobject.h"
 #include <dlib/svm_threaded.h>
 #include <iostream>
 #include <vector>
@@ -31,6 +32,13 @@ class MainWindow : public QMainWindow
     ///
     char* source="/home/craig/data/image.jpg";
     ///__________________________________________
+    ///
+    /// +++++++++++++++++ CASCADE DETECTION ++++++++++++++++++++++++
+
+    CascadeObject cascade;
+    CascadeObject utriCascade;
+    CascadeObject stopSignCascade;
+    CascadeObject triangleCascade;
 
     //+++++++++++++___ DLIB  CLASSIFIER ___+++++++++++++++++++++++++++++++++
     static const int tImageCols=4;

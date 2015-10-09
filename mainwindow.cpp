@@ -8,14 +8,17 @@ using namespace std;
 
 //#define VIDEO_PATH "/home/craig/Videos/50_1080p_Test.dvd"
 //#define VIDEO_PATH "/home/craig/Videos/long.mp4"
+//#define VIDEO_PATH "/home/craig/Videos/30_720p.mp4"
+//#define VIDEO_PATH "/home/craig/Videos/Svizzera_AlexFreeStockVideo.mp4"
 //#define VIDEO_PATH "/home/craig/Videos/debug1.dvd"
-#define VIDEO_PATH "/home/craig/Videos/1.avi"
+//#define VIDEO_PATH "/media/craig/Memory 2/Videos/TestVideo1.mp4"
+#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
 
 
 void MainWindow::setInitVariables()
 {
 
-    //Gui values
+    //Gui valuesm
 
     roiPath="/home/craig/Pictures/training_images/ROI/";
     craigbug=false;
@@ -44,6 +47,15 @@ void MainWindow::setInitVariables()
     huetop=180;
     huebottom=170;
 
+    //_____________ CASCADE DETECTOR LOAD _______________
+
+
+//    cascade.setXmlFile("/home/craig/git_repos/CascadeTrainingOpenCV/data/cascade.xml");
+//    utriCascade.setXmlFile("/home/craig/git_repos/TSR/utriCascade.xml");
+//    stopSignCascade.setXmlFile("/home/craig/git_repos/TSR/stopSignCascade.xml");
+//    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/triangleCascade.xml");
+//    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/triCas30_2.xml");
+    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/all30_cascase.xml");
     //_____________LOAD  DLIB CLASSFIER _________________
 
 //    svm.load("/home/craig/scripts/road1.xml"); // loading
@@ -59,16 +71,16 @@ void MainWindow::setInitVariables()
 
 //    featureRowTemp_=Mat(1,tImageCols,CV_8UC1);
     //__________________ROI HEIGHT FOR SOURCE IMAGE__________________________________
-//    int topx=srcCols/10;
-//    int topy=srcRows/4;
-//    int width=srcCols-2*topx;
-//    int height=srcRows/3;
+    int topx=srcCols/10;
+    int topy=srcRows/4;
+    int width=srcCols-2*topx;
+    int height=srcRows/3;
     //__________________________________________________
     //TEST VIDEOS:
-    int topx=srcCols/10;
-    int topy=0;
-    int width=srcCols-2*topx;
-    int height=srcRows;
+//    int topx=srcCols/10;
+//    int topy=0;
+//    int width=srcCols-2*topx;
+//    int height=srcRows;
     //__________________________________________________
     roi = cv::Rect(topx,topy,width,height);
     a=0;b=0;c=62;d=255;e=46;f=255;
@@ -163,7 +175,9 @@ void MainWindow::on_open_clicked()  //__________________________________________
         //Threshold NEEDS WORK
         benallallRGB();
         //try converted to HSV space
-        hsvSpace();
+//        hsvSpace();
+        //try a cascade classifier
+//        triangleCascade.detectSigns(frame);
 
         //BLUR
         if (ui->cb_Gauss->isChecked()){

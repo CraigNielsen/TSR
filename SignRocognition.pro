@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     ../dlib/dlib/all/source.cpp \
     classifyfunctions.cpp \
     sign_handler.cpp \
-    contourhandler.cpp
+    contourhandler.cpp \
+    cascadeobject.cpp
 
 
 
@@ -43,7 +44,8 @@ HEADERS  += mainwindow.h \
     ../QT_Projects/Image_SVM/cbn_consoleoutput.h \
     ../QT_Projects/Image_SVM/file_io.h \
     sign_handler.h \
-    contourhandler.h
+    contourhandler.h \
+    cascadeobject.h
 
 
 FORMS    += mainwindow.ui

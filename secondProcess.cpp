@@ -193,7 +193,9 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
             }
             db(1.42);
+            cout<< "debug: "<< isSign << " " << sign << endl;
             if (sign=="notSign"){cout<<"caught non sign"<<endl;continue;}
+            if (type!=sign){cout<<"caught uncertainty"<<endl;continue;}
             // get centre position of rect in source image
             if (checkC && showdetections && isSign)
             {
