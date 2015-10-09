@@ -222,23 +222,38 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                         Point pos=signs.locations[key];
                         int iHeight= triangleSign.rows;
 //                        cout<<"is :" <<pos.x + triangleSign.cols <<"> "<< frame.cols<<"? or is  "<<pos.y<<" > "<<frame.cols+triangleSign.cols<<endl;
-//                        if (val=="utri")
+                        //check for x
+                        // check that the sign will fit in the image
+                        if (!(pos.x<iHeight || pos.y <iHeight || pos.x > (frame.cols-iHeight) || pos.y > (frame.rows -iHeight)))
+                        {
+                            if (val=="utri")  (utriSign.copyTo(frame(Rect(pos.x,pos.y,iHeight,iHeight)))) ;
+                            if (val=="triangle")  (triangleSign.copyTo(frame(Rect(pos.x,pos.y,iHeight,iHeight)))) ;
+                            if (val=="circle")      (circleSign.copyTo(frame(Rect(pos.x,pos.y,iHeight,iHeight)))) ;
+                        }
+//                        else if ((pos.x+triangleSign.cols )> frame.cols)
 //                        {
-//                            (utriSign.copyTo(frame(Rect(pos.x+iHeight,pos.y,triangleSign.rows,triangleSign.cols))));
-//                            continue;
+//                            //check for X&y
+//                            if ((pos.y+triangleSign.rows )> frame.rows)
+//                            {
+//                                if (val=="utri")  (utriSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) ;
+//                                if (val=="triangle")  (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) ;
+//                                if (val=="circle") (circleSign.copyTo(frame(Rect(pos.x-1,pos.y-triangleSign.rows,circleSign.rows,circleSign.cols)))) ;
+//                            }
+//                            else
+//                            {
+//                            if(val=="utri")  (utriSign.copyTo(frame(Rect(pos.x-triangleSign.cols-1,pos.y,triangleSign.rows,triangleSign.cols))));
+//                            if (val=="triangle") (triangleSign.copyTo(frame(Rect(pos.x-triangleSign.cols-1,pos.y,triangleSign.rows,triangleSign.cols)))) ;
+//                            if (val=="circle") (circleSign.copyTo(frame(Rect(pos.x-circleSign.rows-1,pos.y,circleSign.rows,circleSign.cols)))) ;
+//                            }
 //                        }
-                        cout<< val<< "at x:" << pos.x <<" y: "<< pos.y << endl;
-                         if ((pos.x+triangleSign.cols )> frame.cols)
-                        {
-                            (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-triangleSign.cols-1,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-circleSign.rows-1,pos.y,circleSign.rows,circleSign.cols)))) ;
-                        }
-                        else if ((pos.y+triangleSign.rows )> frame.rows)
-                        {
-                            (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-1,pos.y-triangleSign.rows,circleSign.rows,circleSign.cols)))) ;
-                        }
-                        else if (pos.x-iHeight > 0 )(val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x-iHeight,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x-iHeight,pos.y,circleSign.rows,circleSign.cols)))) ;
+//                        //check for y
+//                        else if ((pos.y+triangleSign.rows )> frame.rows)
+//                        {
+//                            if (val=="utri")  (utriSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) ;
+//                            if (val=="triangle")  (triangleSign.copyTo(frame(Rect(pos.x-1,pos.y+iHeight-triangleSign.rows,triangleSign.rows,triangleSign.cols)))) ;
+//                            if (val=="circle") (circleSign.copyTo(frame(Rect(pos.x-1,pos.y-triangleSign.rows,circleSign.rows,circleSign.cols)))) ;
+//                        }
 
-                        else (val=="triangle") ? (triangleSign.copyTo(frame(Rect(pos.x+iHeight,pos.y,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(pos.x+iHeight,pos.y,circleSign.rows,circleSign.cols)))) ;
 //                        (val=="triangle") ? (triangleSign.copyTo(frame(Rect(0,0,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(0,0,circleSign.rows,circleSign.cols)))) ;
                     }
 

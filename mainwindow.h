@@ -225,6 +225,8 @@ private slots:
 
     void on_verticalSlider_3_valueChanged(int _value);
 
+    void on_showdetects_clicked();
+
 private:
     Ui::MainWindow *ui;
 

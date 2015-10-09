@@ -87,7 +87,7 @@ map<int,string> sign_handler::checklabels()
             string label;
             if (tricount>circount && tricount > utryCount)  (label="triangle") ;
             else if (circount>tricount && circount > utryCount) (label="circle") ;
-            else if (utryCount>circount && utryCount > tricount) (label="utry") ;
+            else if (utryCount>circount && utryCount > tricount) (label="utri") ;
             signs[key]=label;
         }
     }

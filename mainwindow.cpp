@@ -11,8 +11,8 @@ using namespace std;
 //#define VIDEO_PATH "/home/craig/Videos/30_720p.mp4"
 //#define VIDEO_PATH "/home/craig/Videos/Svizzera_AlexFreeStockVideo.mp4"
 //#define VIDEO_PATH "/home/craig/Videos/debug1.dvd"
-//#define VIDEO_PATH "/media/craig/Memory 2/Videos/TestVideo1.mp4"
-#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
+#define VIDEO_PATH "/media/craig/Memory 2/Videos/TestVideo1.mp4"
+//#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
 
 
 void MainWindow::setInitVariables()
@@ -44,6 +44,7 @@ void MainWindow::setInitVariables()
     Size s=Size(50,50);
     cv::resize(triangleSign,triangleSign,s,0,0,INTER_NEAREST);
     cv::resize(circleSign,circleSign,s,0,0,INTER_NEAREST);
+    cv::resize(utriSign,utriSign,s,0,0,INTER_NEAREST);
     huetop=180;
     huebottom=170;
 
@@ -459,4 +460,9 @@ void MainWindow::on_verticalSlider_3_valueChanged(int _value)
 {
     value=_value;
     ui->V->setText(QString(_value));
+}
+
+void MainWindow::on_showdetects_clicked()
+{
+    showdetections=!showdetections;
 }

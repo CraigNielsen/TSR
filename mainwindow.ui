@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1148</width>
+    <width>1273</width>
     <height>690</height>
    </rect>
   </property>
@@ -121,6 +121,13 @@
          <widget class="QPushButton" name="exportROIbw">
           <property name="text">
            <string>exportROIbw</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="showdetects">
+          <property name="text">
+           <string>showDetections</string>
           </property>
          </widget>
         </item>
@@ -1045,7 +1052,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1148</width>
+     <width>1273</width>
      <height>19</height>
     </rect>
    </property>
