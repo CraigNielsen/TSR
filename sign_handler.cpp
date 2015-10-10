@@ -1,6 +1,6 @@
 #include "sign_handler.h"
 
-#define certainty 7
+#define deleteAfter 4
 
 sign_handler::sign_handler()
 {
@@ -48,7 +48,7 @@ void sign_handler::checkframe(int frameNo)
     for (frameit i = frame.begin();i!=frame.end();i++)
     {
 
-        if ((frameNo - i->second) > certainty)
+        if ((frameNo - i->second) > deleteAfter)
         {
             int deletekey=i->first;
             locations.erase(deletekey);
@@ -70,7 +70,7 @@ map<int,string> sign_handler::checklabels()
         vector<string> vs=i->second;
 
         //count values in vectors with size bigger than 5
-        if(vs.size()>4)
+        if(vs.size()>frameRedundancy)
         {
             int tricount=0;
             int circount=0;

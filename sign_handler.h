@@ -21,7 +21,7 @@ public:
     map<int,vector<string>> labels;
     map<int,cv::Point> locations;
     map<int,int> frame;
-
+    int frameRedundancy=9;
         //add new shape to the object.
     void add(cv::Point p, string label, int frameNo);//check not already a point, add if not "inArea()",otherwise update current location and  add label
     map<int,string> checklabels();

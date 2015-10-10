@@ -11,7 +11,7 @@ using namespace std;
 //#define VIDEO_PATH "/home/craig/Videos/30_720p.mp4"
 //#define VIDEO_PATH "/home/craig/Videos/Svizzera_AlexFreeStockVideo.mp4"
 //#define VIDEO_PATH "/home/craig/Videos/debug1.dvd"
-#define VIDEO_PATH "/media/craig/Memory 2/Videos/TestVideo1.mp4"
+#define VIDEO_PATH "/media/craig/Memory 2/Videos/testvids/testvid3.mp4"
 //#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
 
 
@@ -28,13 +28,14 @@ void MainWindow::setInitVariables()
     bitwise_shape=true;
     size_= cv::Size(11,11);
     name=1;
-    pointDistance = 100;
+    pointDistance = 10;
     leftBinary=imread("/home/craig/Pictures/training_images/shape/left.png",CV_LOAD_IMAGE_GRAYSCALE);
     rightBinary=imread("/home/craig/Pictures/training_images/shape/right.png",CV_LOAD_IMAGE_GRAYSCALE);
     utri=imread("/home/craig/Pictures/training_images/shape/utri.png",CV_LOAD_IMAGE_GRAYSCALE);
     triangleSign=imread("/home/craig/Pictures/test_images/tri.png",CV_LOAD_IMAGE_COLOR);
     circleSign=imread("/home/craig/Pictures/test_images/circ.jpg",CV_LOAD_IMAGE_COLOR);
     utriSign=imread("/home/craig/Pictures/test_images/utri.png",CV_LOAD_IMAGE_COLOR);
+
 
     if(!triangleSign.data){(cout<<"no trianglesign"<<endl);}
     if(!circleSign.data){(cout<<"no circlesign");}
@@ -50,13 +51,14 @@ void MainWindow::setInitVariables()
 
     //_____________ CASCADE DETECTOR LOAD _______________
 
-
+    allCascade.setXmlFile("/home/craig/git_repos/TSR/all30_cascase.xml");
 //    cascade.setXmlFile("/home/craig/git_repos/CascadeTrainingOpenCV/data/cascade.xml");
-//    utriCascade.setXmlFile("/home/craig/git_repos/TSR/utriCascade.xml");
-//    stopSignCascade.setXmlFile("/home/craig/git_repos/TSR/stopSignCascade.xml");
-//    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/triangleCascade.xml");
+    utriCascade.setXmlFile("/home/craig/git_repos/TSR/utriCascade.xml");
+    stopSignCascade.setXmlFile("/home/craig/git_repos/TSR/stopSignCascade.xml");
+    circleCascade.setXmlFile("/home/craig/git_repos/TSR/circleCascade.xml");
+    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/triCas30_2.xml");
 //    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/triCas30_2.xml");
-    triangleCascade.setXmlFile("/home/craig/git_repos/TSR/all30_cascase.xml");
+
     //_____________LOAD  DLIB CLASSFIER _________________
 
 //    svm.load("/home/craig/scripts/road1.xml"); // loading
@@ -75,7 +77,7 @@ void MainWindow::setInitVariables()
     int topx=srcCols/10;
     int topy=srcRows/4;
     int width=srcCols-2*topx;
-    int height=srcRows/3;
+    int height=srcRows/2.5;
     //__________________________________________________
     //TEST VIDEOS:
 //    int topx=srcCols/10;
@@ -163,6 +165,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
             for (int i = 0; i < 20; i++)
             {
                     capture.read(frame);
+                    frameNo++;
             }
         }
         if (! ui->pause_button->isChecked())
@@ -178,8 +181,14 @@ void MainWindow::on_open_clicked()  //__________________________________________
         //try converted to HSV space
 //        hsvSpace();
         //try a cascade classifier
-//        triangleCascade.detectSigns(frame);
+//        utriCascade.detectSigns(frame);
+//        stopSignCascade.detectSigns(frame);
+//        circleCascade.detectSigns(frame);
+///________________________________________________CASCADE TESTING___________________________________
+///
+        triangleCascade.detectSigns(frame,"triangle",VIDEO_PATH);
 
+///__________________________________________________________________________________________________
         //BLUR
         if (ui->cb_Gauss->isChecked()){
             GaussianBlur( src_gray, src_gray, Size(GaussBlurAmt,GaussBlurAmt), 0, 0, BORDER_DEFAULT );}
@@ -222,18 +231,17 @@ void MainWindow::on_open_clicked()  //__________________________________________
 //        imUpdate(ui->rectangleDisplayImg,&src);
 
 
-///        Show in a window
-//        namedWindow("test",2);
-//        imshow("test",src_gray);
-
-//        namedWindow("Source Clean",CV_WINDOW_FREERATIO);
-//        cv::imshow("Source Clean", src_clean);
+        int fontface = cv::FONT_HERSHEY_SIMPLEX;
+        double scale = 2;
+        int thickness = 3;
+        cv::putText(SrcRoi,to_string(frameNo),Point (100,100), fontface, scale,
+                    CV_RGB(0,0,255), thickness, 8);
 
         namedWindow( "Contours2", 2 );
         imshow( "Contours2", SrcRoi );
         imUpdate(ui->finalvideo,&SrcRoi,"colour");
 
-        cout<<"Frame NUmber is: "<<frameNo<<endl;
+//        cout<<"Frame NUmber is: "<<frameNo<<endl;
 //        namedWindow("processed",CV_WINDOW_FREERATIO);
 //        cv::imshow("processed",framout);
 
@@ -466,3 +474,9 @@ void MainWindow::on_showdetects_clicked()
 {
     showdetections=!showdetections;
 }
+
+void MainWindow::on_pauseOnSHapeButton_clicked()
+{
+    pauseOnShape=!pauseOnShape;
+}
+

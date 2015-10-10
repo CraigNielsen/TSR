@@ -14,6 +14,7 @@
 #include "cascadeobject.h"
 #include <dlib/svm_threaded.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <dlib/rand.h>
 
@@ -35,10 +36,11 @@ class MainWindow : public QMainWindow
     ///
     /// +++++++++++++++++ CASCADE DETECTION ++++++++++++++++++++++++
 
-    CascadeObject cascade;
+    CascadeObject allCascade;
     CascadeObject utriCascade;
     CascadeObject stopSignCascade;
     CascadeObject triangleCascade;
+    CascadeObject circleCascade;
 
     //+++++++++++++___ DLIB  CLASSIFIER ___+++++++++++++++++++++++++++++++++
     static const int tImageCols=4;
@@ -68,6 +70,7 @@ class MainWindow : public QMainWindow
     bool bitwise_shape=true;
     bool showdetections=true;
     int pointDistance;
+
 
     string roiPath;
     cv::Size size_;
@@ -227,6 +230,10 @@ private slots:
 
     void on_showdetects_clicked();
 
+    void on_pauseOnSHapeButton_clicked();
+
+
+
 private:
     Ui::MainWindow *ui;
 
@@ -235,6 +242,9 @@ private:
     void Setup(Mat &frame) ;                               //updates combinedGradient as final product
     void XYEdges();
     void imBWUpdate(QLabel *imageDisplay, Mat *CVimage);
+    bool pauseOnShape=true;
+
+
 
     //________________________MorphologyEx______________________________________
     void imUpdate(QLabel *imageDisplay , Mat *CVimage, String colour="gray");

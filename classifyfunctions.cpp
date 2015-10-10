@@ -200,7 +200,7 @@ string MainWindow::getShape(Mat &src_)
 //  create a feature vector
 
     if (src_.channels()>1){cout<<"this is a 3 channel image, please use the 3C function instead"<<endl;}
-    imshow("window:",src_);
+//    imshow("window:",src_);
 //    waitKey(1000);
     double ly=trainer.yLocationLeft(src_);
     double ry=trainer.yLocationRight(src_);
@@ -226,7 +226,7 @@ string MainWindow::getShape(Mat &src_)
     // get the label of the test vector
     string label;
 
-    cout << "dlib predicted label: "<< df3(m)<< "for"<< ly << " " <<ry << " " <<leftRow << " " <<totalPercent << " " << endl;
+//    cout << "dlib predicted label: "<< df3(m)<< "for"<< ly << " " <<ry << " " <<leftRow << " " <<totalPercent << " " << endl;
     if (df3(m)==1){label="utri";}
     else if (df3(m)==0){label="circle";}
     else if (df3(m)==2){label="tri";}

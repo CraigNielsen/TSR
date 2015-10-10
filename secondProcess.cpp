@@ -193,9 +193,8 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
             }
             db(1.42);
-            cout<< "debug: "<< isSign << " " << sign << endl;
-            if (sign=="notSign"){cout<<"caught non sign"<<endl;continue;}
-            if (type!=sign){cout<<"caught uncertainty"<<endl;continue;}
+            if (sign=="notSign"){/*cout<<"caught non sign"<<endl;*/continue;}
+            if (type!=sign){/*cout<<"caught uncertainty"<<endl;*/continue;}
             // get centre position of rect in source image
             if (checkC && showdetections && isSign)
             {
@@ -208,6 +207,8 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
 
                 signs.add(centre,sign,frameNo);
                 //check is any labels are set yet
+                //change the number of frames required for classifiy shape
+                signs.frameRedundancy=6;
                 map<int,string> mp=signs.checklabels();
                 map<int,string>::iterator i;
                 db(1.5);
@@ -229,6 +230,12 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                             if (val=="utri")  (utriSign.copyTo(frame(Rect(pos.x,pos.y,iHeight,iHeight)))) ;
                             if (val=="triangle")  (triangleSign.copyTo(frame(Rect(pos.x,pos.y,iHeight,iHeight)))) ;
                             if (val=="circle")      (circleSign.copyTo(frame(Rect(pos.x,pos.y,iHeight,iHeight)))) ;
+                        }
+                        else
+                        {
+                            if (val=="utri")  (utriSign.copyTo(frame(Rect(pos.x/2,pos.y/2,iHeight,iHeight)))) ;
+                            if (val=="triangle")  (triangleSign.copyTo(frame(Rect(pos.x/2,pos.y/2,iHeight,iHeight)))) ;
+                            if (val=="circle")      (circleSign.copyTo(frame(Rect(pos.x/2,pos.y/2,iHeight,iHeight)))) ;
                         }
 //                        else if ((pos.x+triangleSign.cols )> frame.cols)
 //                        {
@@ -257,11 +264,11 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
 //                        (val=="triangle") ? (triangleSign.copyTo(frame(Rect(0,0,triangleSign.rows,triangleSign.cols)))) : (circleSign.copyTo(frame(Rect(0,0,circleSign.rows,circleSign.cols)))) ;
                     }
 
-//                    int fontface = cv::FONT_HERSHEY_SIMPLEX;
-//                    double scale = 2;
-//                    int thickness = 3;
-//                    cv::putText(frame,to_string(frameNo),Point (100,100), fontface, scale, CV_RGB(0,0,255), thickness, 8);
-//                    namedWindow("contours2",2);
+
+                    if (pauseOnShape){
+                        waitKey(0);
+                    }
+                    //                    namedWindow("contours2",2);
 //                    imshow("contours2",frame);
 
                 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1273</width>
+    <width>1277</width>
     <height>690</height>
    </rect>
   </property>
@@ -108,7 +108,14 @@
     </item>
     <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="6">
+      <item row="1" column="0">
+       <widget class="QSpinBox" name="sobelGradientSpinBox">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QPushButton" name="processRectanglesButton">
@@ -128,6 +135,13 @@
          <widget class="QPushButton" name="showdetects">
           <property name="text">
            <string>showDetections</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pauseOnSHapeButton">
+          <property name="text">
+           <string>Pause on Shape</string>
           </property>
          </widget>
         </item>
@@ -180,7 +194,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="7">
+      <item row="0" column="8">
        <widget class="QSlider" name="contourRModeSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -332,13 +346,6 @@
         </property>
         <property name="value">
          <number>3</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QSpinBox" name="sobelGradientSpinBox">
-        <property name="maximum">
-         <number>90</number>
         </property>
        </widget>
       </item>
@@ -527,7 +534,7 @@
         </item>
        </layout>
       </item>
-      <item row="0" column="6">
+      <item row="0" column="7">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="2">
          <widget class="QSlider" name="hueslidertop">
@@ -579,6 +586,9 @@
          <widget class="QSlider" name="verticalSlider">
           <property name="maximum">
            <number>200</number>
+          </property>
+          <property name="value">
+           <number>10</number>
           </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -783,7 +793,7 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="6">
+      <item row="2" column="7">
        <layout class="QGridLayout" name="gridLayout_6">
         <item row="2" column="0">
          <widget class="QCheckBox" name="cb_Gauss">
@@ -902,6 +912,31 @@
            </widget>
           </item>
          </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="6">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QPushButton" name="trueDetectBut">
+          <property name="text">
+           <string>true detect</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="rightShapeBut">
+          <property name="text">
+           <string>right shape</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="falseDetectBut">
+          <property name="text">
+           <string>false detect</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -1052,7 +1087,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1273</width>
+     <width>1277</width>
      <height>19</height>
     </rect>
    </property>
