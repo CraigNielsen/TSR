@@ -66,7 +66,7 @@ void MainWindow::hsvSpace()
     //converts SrcRoi to HSV space
     //tries to find the roi in that space instead of rgb
 
-    Mat hsv=SrcRoi.clone();
+    Mat hsv=SrcRoi_clean.clone();
     Mat dst=Mat::zeros(SrcRoi.rows,SrcRoi.cols,CV_8UC1);
     cvtColor(hsv,hsv,CV_BGR2HSV);
 //    huebottom=160;
@@ -140,6 +140,7 @@ void MainWindow::benallallRGB()
 
 //    src_gray= blank.clone();
     cv::inRange(blank, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src_gray);
+    imshow("rgb color",src_gray);
 
 }
 

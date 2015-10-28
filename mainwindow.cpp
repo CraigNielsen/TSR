@@ -6,12 +6,9 @@ using namespace std;
 
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
-//#define VIDEO_PATH "/home/craig/Videos/50_1080p_Test.dvd"
-//#define VIDEO_PATH "/home/craig/Videos/long.mp4"
-//#define VIDEO_PATH "/home/craig/Videos/30_720p.mp4"
-//#define VIDEO_PATH "/home/craig/Videos/Svizzera_AlexFreeStockVideo.mp4"
-//#define VIDEO_PATH "/home/craig/Videos/debug1.dvd"
-#define VIDEO_PATH "/media/craig/Memory 2/Videos/testvids/testvid3.mp4"
+
+#define VIDEO_PATH "/media/craig/Memory/linux1/Videos/testvids/testvid4.mp4"
+//#define VIDEO_PATH "/media/craig/Memory 2/Videos/30_720p.mp4"
 //#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
 
 
@@ -157,7 +154,8 @@ void MainWindow::on_open_clicked()  //__________________________________________
     setInitVariables();
     cout<<"done here"<<endl;
     bool stop = false;
-
+    int frameCounts=0;
+    float averagetime=0;
     while (!stop) {                                                             // for all frames in video
         frameNo +=1;
         if (ui->df->isChecked())
@@ -172,21 +170,32 @@ void MainWindow::on_open_clicked()  //__________________________________________
         {
             if (!capture.read(frame)){break;} ;
         }
-
+//        capture.read(frame);
+//        capture.read(frame);
+//        frameNo+=1;
+//        frameNo+=1;
 //        change.brightness(frame,0);
+        clock_t begin = clock();
         //______________________________________________________________________________PART 1
         Setup(frame);
         //Threshold NEEDS WORK
         benallallRGB();
         //try converted to HSV space
-//        hsvSpace();
-        //try a cascade classifier
-//        utriCascade.detectSigns(frame);
-//        stopSignCascade.detectSigns(frame);
-//        circleCascade.detectSigns(frame);
+        hsvSpace();
+
+
+
+
 ///________________________________________________CASCADE TESTING___________________________________
-///
-        triangleCascade.detectSigns(frame,"triangle",VIDEO_PATH);
+
+//        triangleCascade.detectSigns(frame,"triangle",VIDEO_PATH);
+//        circleCascade.detectSigns(frame,"circle",VIDEO_PATH);
+//        utriCascade.detectSigns(frame,"yield",VIDEO_PATH);
+
+
+//        allCascade.detectSigns(frame,"all",VIDEO_PATH);
+
+        //        stopSignCascade.detectSigns(frame);
 
 ///__________________________________________________________________________________________________
         //BLUR
@@ -220,9 +229,17 @@ void MainWindow::on_open_clicked()  //__________________________________________
             classifyShape(contours1,recAreas,SrcRoi);
         }
         db(2);
-            /// Show in a window
-//            namedWindow( "Contours", CV_WINDOW_FREERATIO );
-//            imshow( "Contours", drawing );
+
+        //________________________________________________________TIMING IT.......................
+//        frameCounts+=1;
+//        clock_t end = clock();
+//        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+//        cout<< "average time"<< elapsed_secs << endl;
+
+//        if (frameCounts>1)  averagetime= (averagetime + elapsed_secs)/2 ;
+//        else averagetime = elapsed_secs;
+
+//        cout<<frameCounts<< " ________________my average"<<averagetime<<endl;
 
 
 
@@ -450,6 +467,7 @@ void MainWindow::on_hueslidertop_valueChanged(int value)
 void MainWindow::on_huesliderbottom_valueChanged(int value)
 {
     huebottom=value;
+    cout<<huebottom<<endl;
 }
 
 void MainWindow::on_exportROIbw_clicked()

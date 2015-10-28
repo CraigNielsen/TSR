@@ -180,20 +180,21 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 imwrite(roiPath+std::to_string(name)+".png",imageROI);
                 name+=1;
             }
-            bool isSign;
+            bool isSign=false;
             //check centre is not red, then find shape classify for the rectangle(roi and position)
             bool checkC=preProcessROI(imageROI);
             db(1.41);
             string type,sign;
             if (checkC && bitwise_shape) //checks if center is red or not
             {
+//                countRegions+=1;
 
                 try{isSign=binaryShape(imageROI,type);
                 sign=getShape(imageROI);}//true if triangle, false if circle
                 catch(exception e){ cout<<"cought an exception" << "is the template ROI same size as roi: (size_):"<<size_<<endl;}
             }
             db(1.42);
-            if (sign=="notSign"){/*cout<<"caught non sign"<<endl;*/continue;}
+//            if (! isSign){/*cout<<"caught non sign"<<endl;*/continue;}
             if (type!=sign){/*cout<<"caught uncertainty"<<endl;*/continue;}
             // get centre position of rect in source image
             if (checkC && showdetections && isSign)
@@ -205,7 +206,8 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 ir1.locateROI(s,centre);
                 db(1.43);
 
-                signs.add(centre,sign,frameNo);
+//                signs.add(centre,sign,frameNo);
+                signs.add(centre,type,frameNo);
                 //check is any labels are set yet
                 //change the number of frames required for classifiy shape
                 signs.frameRedundancy=6;
@@ -217,6 +219,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
                 if (mp.size()>0){
                     for ( i=mp.begin();i!=mp.end();i++)
                     {
+//                        cout<<"count regions: "<<countRegions++<<endl;
                         //set image at position using key
                         int key = i-> first;
                         string val=i->second;

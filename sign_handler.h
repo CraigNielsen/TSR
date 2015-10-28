@@ -21,25 +21,21 @@ public:
     map<int,vector<string>> labels;
     map<int,cv::Point> locations;
     map<int,int> frame;
+    int signCounter =0 ;
     int frameRedundancy=9;
-        //add new shape to the object.
+    //add new shape to the object.
     void add(cv::Point p, string label, int frameNo);//check not already a point, add if not "inArea()",otherwise update current location and  add label
     map<int,string> checklabels();
     //object can search its current items and compare based on x,y coordinates
-
-
 private:
     int name=1;
     int inArea(cv::Point & p); //return the value of the key for same location
     void checkframe(int frameNo);
-
     //use position to find last shape in same position.
-
     //if object has 5 same shapes, classify(bring up image)
     //object can contain areas for possible shapes
     //object can contain each areas past shape classifications..
     //object can handle showing sign on screen
-
     //every time a position is checked, the object will update position and give a new label.
     //object will remove possibles if 10 frames pass without close detection
 };

@@ -12,6 +12,8 @@ void sign_handler::add(cv::Point p, string label,int frameNo)
     int closeto=inArea(p);
     if (closeto==0)
     {
+        signCounter++;
+        cout<<"sign counter regions: "<<signCounter<<endl;
         labels[name].push_back(label);
         locations[name]=p;
         frame[name]=frameNo;

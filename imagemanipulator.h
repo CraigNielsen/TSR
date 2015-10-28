@@ -16,5 +16,4 @@ private:
     bool checkcenter(const Rect *Rect1, const Rect *Rect2);
     void setLabel(cv::Mat &im, const std::string label, std::vector<cv::Point> &contour);
 };
-
 #endif // IMAGEMANIPULATOR_H
