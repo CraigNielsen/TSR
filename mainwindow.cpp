@@ -7,7 +7,7 @@ using namespace std;
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
 
-#define VIDEO_PATH "/media/craig/Memory/linux1/Videos/testvids/testvid4.mp4"
+#define VIDEO_PATH "/media/craig/Memory/linux1/Videos/testVideo1.mp4"
 //#define VIDEO_PATH "/media/craig/Memory 2/Videos/30_720p.mp4"
 //#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
 
@@ -131,7 +131,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+void showFrameNumber(Mat src, int frameNo){
+            int fontface = cv::FONT_HERSHEY_SIMPLEX;
+            double scale = 2;
+            int thickness = 3;
+            cv::putText(src,to_string(frameNo),Point (100,100), fontface, scale,
+                        CV_RGB(0,0,255), thickness, 8);
+}
 
 void MainWindow::on_open_clicked()  //__________________________________________Open Image/refresh Image
 {
@@ -181,7 +187,7 @@ void MainWindow::on_open_clicked()  //__________________________________________
         //Threshold NEEDS WORK
         benallallRGB();
         //try converted to HSV space
-        hsvSpace();
+//        hsvSpace();
 
 
 
@@ -247,12 +253,8 @@ void MainWindow::on_open_clicked()  //__________________________________________
         imUpdate(ui->contourDisplayImg,&cnt_img,"colour");
 //        imUpdate(ui->rectangleDisplayImg,&src);
 
+//        showFrameNumber(SrcRoi, frameNo);
 
-        int fontface = cv::FONT_HERSHEY_SIMPLEX;
-        double scale = 2;
-        int thickness = 3;
-        cv::putText(SrcRoi,to_string(frameNo),Point (100,100), fontface, scale,
-                    CV_RGB(0,0,255), thickness, 8);
 
         namedWindow( "Contours2", 2 );
         imshow( "Contours2", SrcRoi );
@@ -295,9 +297,6 @@ void MainWindow::setupWindow2()
 
 
 }
-
-
-
 
 
 

@@ -140,7 +140,7 @@ void MainWindow::benallallRGB()
 
 //    src_gray= blank.clone();
     cv::inRange(blank, cv::Scalar(20, 20, 20), cv::Scalar(255, 255, 255), src_gray);
-    imshow("rgb color",src_gray);
+//    imshow("rgb color",src_gray);
 
 }
 

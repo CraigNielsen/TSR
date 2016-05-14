@@ -98,7 +98,7 @@ void MainWindow::selectROI(vector<vector<Point> > & contours1,vector<Rect> & min
 
     ///hand it a full contours and empty rectangle(that the function will fill)
     /// find areas around contours:
-    Mat outImage=SrcRoi;
+//    Mat outImage=SrcRoi;
     Scalar color = Scalar( 255, 255, 255 );
 
     vector<RotatedRect> minEllipse( contours1.size() );
@@ -143,7 +143,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
     for( unsigned int i = 0; i< contours1.size(); i++ )
     {
 
-        Scalar color = Scalar( 255, 255, 255 );
+        Scalar color = Scalar( 255, 0, 0 );
         int a=(minAreaRect( Mat(contours1[i]) ).size.area());
 
         if ( a > minA && a < maxA )
@@ -154,7 +154,7 @@ void MainWindow::classifyShape(vector<vector<Point> > & contours1,vector<Rect> m
 //            ellipse( dst_, re, color, thickness, 8 );
             //_____________________________________________________________________________________
             //draw rectangle
-            rectangle( SrcRoi, minRect[i].tl(), minRect[i].br(), color, 2, 8, 0 );
+            rectangle( SrcRoi, minRect[i].tl(), minRect[i].br(), color, 3, 8, 0 );
             //get ROI, test ROI, printout Class
             Rect r1=minRect[i];
             Rect ro;
