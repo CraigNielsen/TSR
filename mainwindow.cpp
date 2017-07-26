@@ -7,7 +7,7 @@ using namespace std;
 #define IMAGE_DIR "/home/craig/QT/scripts/"
 
 
-#define VIDEO_PATH "/media/craig/Memory/linux1/Videos/testVideo1.mp4"
+#define VIDEO_PATH "/media/Memory/linux1/Videos/testVideo1.mp4"
 //#define VIDEO_PATH "/media/craig/Memory 2/Videos/30_720p.mp4"
 //#define VIDEO_PATH "/media/craig/Memory 2/Videos/1.avi"
 
